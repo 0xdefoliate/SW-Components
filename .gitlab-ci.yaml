@@ -1,0 +1,51 @@
+image: node:24.10.0-alpine
+
+workflow:
+    rules:
+        # We only want to run this pipeline when a new version gets pushed.
+        -   if: $CI_COMMIT_BRANCH =~ /^v?.+/
+
+default:
+    before_script:
+        - corepack enable pnpm
+        - pnpm i -g firebase-tools
+        - pnpm i
+
+stages:
+    - build
+    - test
+    - deploy
+
+### JOBS ###
+
+build:
+    stage: build
+    script:
+        - pnpm run unsafe:build
+    artifacts:
+        paths:
+            - dist/
+        expire_in: 2 mins 30 sec
+
+audit:
+    stage: test
+    script:
+        - pnpm audit
+    dependencies:
+        - build
+
+lint:
+    stage: test
+    script:
+        - pnpm run unsafe:lint
+    dependencies:
+        - audit
+
+deploy:
+    stage: deploy
+    environment: production
+    script:
+        - npm config set //registry.npmjs.org/:_authToken "${NPM_SOLIDWEATHER_ACCESS_TOKEN}"
+        - npm publish --access public
+    dependencies:
+        - lint
