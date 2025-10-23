@@ -7,6 +7,8 @@
 
 "use strict"
 
+import "./ProgressBar.css"
+
 export function ProgressBar({ progress }: { progress: number }) {
 
     // Prevent overflow of the progress bar.

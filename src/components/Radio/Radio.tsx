@@ -10,6 +10,8 @@
 import { useId } from "react"
 import { Container } from "../Container/Container.js"
 
+import "./Radio.css"
+
 export function Radio({ label, name, value }: { label: string, name: string; value: string }) {
 
     const radioId = useId()

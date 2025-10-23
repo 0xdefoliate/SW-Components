@@ -10,6 +10,8 @@
 import type { ReactNode } from "react"
 import type { BaseProps } from "../../index.js"
 
+import "./Button.css"
+
 export interface ButtonProps extends BaseProps<HTMLButtonElement> {
     children?: ReactNode
     primary?: boolean

@@ -9,6 +9,8 @@
 
 import type { ReactNode } from "react"
 
+import "./Container.css"
+
 export function Container({ children, vertical, centre, gap }: {
     children: ReactNode,
     vertical?: boolean,

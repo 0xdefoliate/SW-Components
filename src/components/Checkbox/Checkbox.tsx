@@ -11,6 +11,8 @@ import { useId, useState } from "react"
 import type { BaseProps } from "../../index.js"
 import { Container } from "../Container/Container.js"
 
+import "./Checkbox.css"
+
 export interface CheckboxProps extends BaseProps<HTMLDivElement> {
     change: (checked: boolean) => void,
     disabled?: boolean,
