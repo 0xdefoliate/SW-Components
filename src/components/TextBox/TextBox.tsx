@@ -9,6 +9,8 @@
 
 import type { BaseProps } from "../../index.js"
 
+import "./TextBox.css"
+
 export interface TextBoxProps extends BaseProps<HTMLInputElement> {
     value: string,
     onInput: (newValue: string) => void,

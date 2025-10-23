@@ -11,6 +11,8 @@ import { type ReactNode, useEffect, useId, useRef, useState } from "react"
 import type { BaseProps } from "../../index.js"
 import { Container } from "../Container/Container.js"
 
+import "./Dropdown.css"
+
 interface DropdownItem {
     text: string
     value: string

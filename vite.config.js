@@ -19,8 +19,7 @@ export default defineConfig({
         lib: {
             entry: resolve(__dirname, "./src/index.ts"),
             name: "SolidWeather-Components",
-            filename: "bundle",
-            outDir: dirname
+            cssFileName: "index"
         },
 
         rollupOptions: {

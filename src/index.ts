@@ -19,6 +19,8 @@ import { Slider } from "./components/Slider/Slider"
 import { Spacer } from "./components/Spacer/Spacer"
 import { TextBox } from "./components/TextBox/TextBox"
 
+import "./index.css"
+
 export interface BaseProps<T> {
     ref?: RefObject<T | null>
     label?: string

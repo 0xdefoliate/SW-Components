@@ -7,6 +7,8 @@
 
 "use strict"
 
+import "./Slider.css"
+
 export interface SliderProps {
     label: string
     range: [ number, number ]
