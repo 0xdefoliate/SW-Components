@@ -1,0 +1,31 @@
+/*
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+.X-ProgressBar {
+
+    position: relative;
+
+    width: 200px;
+    height: 16px;
+
+    border-radius: 100px;
+}
+
+.X-ProgressBar > .progress {
+    position: absolute;
+
+    top: 0;
+    left: 0;
+
+    height: 16px;
+
+    border-radius: 100px;
+
+    background: linear-gradient(90deg, var(--X-primary-darker), var(--X-primary), var(--X-primary-brighter));
+
+    box-shadow: 4px 0 8px rgba(0, 0, 0, 0.2);
+}

@@ -1,0 +1,6 @@
+<component name="CopyrightManager">
+  <copyright>
+    <option name="notice" value="Copyright (c) &amp;#36;originalComment.match(&quot;Copyright \(c\) (\d+)&quot;, 1, &quot;-&quot;, &quot;&amp;#36;today.year&quot;)&amp;#36;today.year Axel &quot;Foley&quot; Karlsson and contributors.&#10;&#10;Use of this source code is governed by the MIT License, which you may&#10;view in its entirety in the LICENSE file, found in the project's root directory." />
+    <option name="myName" value="SolidWeather (Components)" />
+  </copyright>
+</component>

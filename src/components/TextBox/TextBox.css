@@ -1,0 +1,28 @@
+/*
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+.X-TextInput {
+    font-family: var(--X-default-font-family), sans-serif;
+    font-size: var(--X-default-font-size);
+
+    padding: 6px 4px;
+
+    border-color: var(--X-grey-400);
+
+    border-radius: 0;
+
+    outline: none;
+
+    background: linear-gradient(180deg, var(--X-grey-700), var(--X-grey-800), var(--X-grey-800));
+
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.4) inset;
+}
+
+.X-TextInput:focus {
+    border-radius: 0;
+    outline-color: var(--X-primary-brighter);
+}

@@ -1,0 +1,28 @@
+services:
+    build-job:
+        build:
+            context: .
+            dockerfile: docker/jobs/build/Dockerfile
+
+        volumes:
+            - ./dist:/app/dist
+
+
+
+    dev-job:
+        build:
+            context: .
+            dockerfile: docker/jobs/dev/Dockerfile
+
+        ports:
+            - "5173:5173"
+
+        volumes:
+            -   type: bind
+                source: .
+                target: /app
+                read_only: true
+
+            - /app/node_modules/
+            - /app/dist/
+            - /dev/null:/app/package-lock.json

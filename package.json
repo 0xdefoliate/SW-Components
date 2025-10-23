@@ -1,0 +1,45 @@
+{
+    "name": "components",
+    "version": "0.1.0",
+    "author": {
+        "name": "Axel \"Foley\" Karlsson",
+        "url": "https://axelkarlsson.se"
+    },
+    "description": "A simple and tiny skeuomorphic React UI toolkit, mainly used for SolidWeather.",
+    "license": "MIT",
+    "main": "dist/index.js",
+    "type": "module",
+    "scripts": {
+        "docker:build": "docker compose up build-job && docker compose down build-job --rmi all",
+        "docker:server": "docker compose up dev-job && docker compose down dev-job --rmi all",
+        "unsafe:test": "echo \"Error: no test specified\" && exit 1",
+        "unsafe:build": "rm -rf dist/* && vite build && tsc --project tsconfig.json && rm -rf dist/dev",
+        "unsafe:server": "vite"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://gitlab.com/solidweather/components.git"
+    },
+    "exports": {
+        ".": {
+            "import": "./dist/components.js",
+            "require": "./dist/components.umd.cjs"
+        },
+        "./style.css": "./dist/components.css"
+    },
+    "devDependencies": {
+        "@eslint/js": "9.35.0",
+        "@types/react": "19.1.12",
+        "@types/react-dom": "19.1.9",
+        "@vitejs/plugin-react": "4.7.0",
+        "eslint": "9.35.0",
+        "eslint-plugin-react-hooks": "5.2.0",
+        "eslint-plugin-react-refresh": "0.4.20",
+        "globals": "16.4.0",
+        "typescript": "5.8.3",
+        "typescript-eslint": "8.43.0",
+        "vite": "7.1.5",
+        "react": "19.1.1",
+        "react-dom": "19.1.1"
+    }
+}

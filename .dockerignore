@@ -1,0 +1,9 @@
+dist
+docker
+
+# We don't need node_modules and package-lock.json since
+# it may cause issues á la: https://github.com/npm/cli/issues/4828
+node_modules
+package-lock.json
+
+compose.yaml

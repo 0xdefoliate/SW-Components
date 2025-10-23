@@ -1,0 +1,29 @@
+/*
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+.X-Slider {
+    width: 100%;
+
+    height: 16px;
+    border-radius: 100px;
+}
+
+.X-Slider::-webkit-slider-thumb {
+    width: 7px;
+    height: 28px;
+
+    border: 1px solid var(--X-grey-500);
+    border-radius: 6px;
+
+    background: linear-gradient(180deg, var(--X-grey-800), var(--X-grey-600));
+
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.3);
+
+    -webkit-appearance: none;
+
+    appearance: none;
+}

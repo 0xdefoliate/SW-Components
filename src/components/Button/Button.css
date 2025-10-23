@@ -1,0 +1,62 @@
+/*
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+.X-Button {
+    font-family: var(--X-default-font-family), sans-serif;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    padding: 12px;
+
+    cursor: pointer;
+
+    -webkit-user-select: none;
+    user-select: none;
+
+    transition-property: background-color, box-shadow, border-color, filter, background;
+    color: var(--X-fg);
+
+    border: 1px solid var(--X-grey-600);
+
+    border-radius: var(--X-default-border-radius);
+
+    outline: none;
+
+    background: linear-gradient(180deg, var(--X-bg), var(--X-grey-600));
+
+    @media (prefers-color-scheme: dark) {
+        background: linear-gradient(180deg, var(--X-grey-300), var(--X-grey-600));
+    }
+}
+
+.X-Button.primary {
+    color: white;
+
+    border: 1px solid var(--X-primary-brighter);
+    background: linear-gradient(180deg, var(--X-primary-brighter), var(--X-primary-darker));
+}
+
+.X-Button.primary:active:not(:disabled) {
+    background: linear-gradient(180deg, var(--X-primary-darker), var(--X-primary));
+}
+
+.X-Button:disabled {
+    cursor: not-allowed;
+    filter: contrast(0.6);
+}
+
+.X-Button:not(.primary):active:not(:disabled) {
+    background: linear-gradient(180deg, var(--X-grey-500), var(--X-grey-700));
+
+    @media (prefers-color-scheme: dark) {
+        background: linear-gradient(180deg, var(--X-grey-500), var(--X-grey-500));
+    }
+}
+
+.X-Button:focus-visible {
+    border-color: var(--X-fg);
+}
