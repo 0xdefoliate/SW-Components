@@ -7,8 +7,6 @@ services:
         volumes:
             - ./dist:/app/dist
 
-
-
     dev-job:
         build:
             context: .
@@ -26,3 +24,8 @@ services:
             - /app/node_modules/
             - /app/dist/
             - /dev/null:/app/package-lock.json
+
+    lint-job:
+        build:
+            context: .
+            dockerfile: docker/jobs/lint/Dockerfile
