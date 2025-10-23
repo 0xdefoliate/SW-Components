@@ -22,10 +22,11 @@
     },
     "exports": {
         ".": {
+            "types": "./dist/index.d.ts",
             "import": "./dist/components.js",
             "require": "./dist/components.umd.cjs"
         },
-        "./style.css": "./dist/components.css"
+        "./style.css": "./dist/index.css"
     },
     "devDependencies": {
         "@eslint/js": "9.35.0",
