@@ -6,12 +6,9 @@ workflow:
 
 default:
     before_script:
-        - corepack enable pnpm
-        # Stupidly enough, `pnpm` does not have a `no-interactive` mode and can thus block stdin...
-        - yes | pnpm setup
-        - . ~/.bashrc
-        - pnpm i -g firebase-tools
-        - pnpm i
+        - rm package-lock.json
+        - rm -rf node_modules
+        - npm i
 
 stages:
     - build
@@ -23,7 +20,7 @@ stages:
 build:
     stage: build
     script:
-        - pnpm run unsafe:build
+        - npm run unsafe:build
     artifacts:
         paths:
             - dist/
@@ -32,14 +29,14 @@ build:
 audit:
     stage: test
     script:
-        - pnpm audit
+        - npm audit
     dependencies:
         - build
 
 lint:
     stage: test
     script:
-        - pnpm run unsafe:lint
+        - npm run unsafe:lint
     dependencies:
         - audit
 
