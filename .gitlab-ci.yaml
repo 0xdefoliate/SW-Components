@@ -10,7 +10,7 @@ workflow:
 default:
     before_script:
         - corepack enable pnpm
-        - # Stupidly enough, `pnpm` does not have a `no-interactive` mode and can thus block stdin...
+        # Stupidly enough, `pnpm` does not have a `no-interactive` mode and can thus block stdin...
         - yes | pnpm setup
         - . ~/.bashrc
         - pnpm i -g firebase-tools
