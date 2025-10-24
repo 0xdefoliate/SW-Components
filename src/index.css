@@ -66,6 +66,16 @@
      */
 
     --X-default-border-radius: 6px;
+
+    /*
+     * Navbar
+     */
+
+    --X-navbar-height: 10vh;
+    --X-navbar-brand-font-family: system-ui;
+
+    --X-navbar-gradient-start-color: var(--X-grey-800);
+    --X-navbar-gradient-end-color: var(--X-grey-700);
 }
 
 * {

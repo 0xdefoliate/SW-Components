@@ -1,0 +1,68 @@
+/*
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+.X-Navbar {
+    width: 100%;
+    height: var(--X-navbar-height);
+    min-height: 4rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(180deg, var(--X-navbar-gradient-start-color), var(--X-navbar-gradient-end-color));
+}
+
+.X-Navbar > .navbar-brand-and-items {
+    display: flex;
+    width: max-content;
+    align-items: center;
+    gap: 3rem;
+}
+
+.X-Navbar .navbar-brand {
+    padding-left: 1.5rem;
+    font-size: 2.25rem;
+    font-family: var(--X-navbar-brand-font-family), sans-serif;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.X-Navbar .navbar-brand > a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.X-Navbar .navbar-items {
+    font-size: 1.15rem;
+    list-style-type: none;
+    display: flex;
+    width: max-content;
+    padding: 0;
+    margin: 0;
+    gap: 16px;
+}
+
+@media (max-width: 650px) {
+    .X-Navbar > .navbar-brand {
+        padding-right: 2rem;
+    }
+}
+
+.X-Navbar > .navbar-final-item {
+    padding-right: 1rem;
+}
+
+@media (max-width: 650px) {
+    .X-Navbar > .navbar-brand {
+        padding-right: 1.5rem;
+        font-size: 1.75rem;
+    }
+
+    .X-Navbar > .navbar-items {
+        font-size: 0.85rem;
+    }
+}
+
