@@ -7,6 +7,7 @@ workflow:
 default:
     before_script:
         - corepack enable pnpm
+        - SHELL=bash
         # Stupidly enough, `pnpm` does not have a `no-interactive` mode and can thus block stdin...
         - yes | pnpm setup
         - . ~/.bashrc
