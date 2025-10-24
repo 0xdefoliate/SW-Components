@@ -2,8 +2,10 @@ image: node:24.10.0-alpine
 
 workflow:
     rules:
-        # We only want to run this pipeline when a new version gets pushed.
-        -   if: $CI_COMMIT_BRANCH =~ /^v?.+/
+        -   if: $CI_MERGE_REQUEST_DRAFT
+            when: never
+        -   if: $CI_MERGE_REQUEST_SOURCE_BRANCH_NAME =~ /^release.*/ && $CI_MERGE_REQUEST_APPROVED
+            when: always
 
 default:
     before_script:
