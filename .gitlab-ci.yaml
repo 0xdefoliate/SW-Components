@@ -8,7 +8,6 @@ default:
     before_script:
         - rm package-lock.json
         - rm -rf node_modules
-        - npm i -g firebase-tools
         - npm i
 
 stages:
