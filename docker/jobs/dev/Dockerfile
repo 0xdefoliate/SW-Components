@@ -11,6 +11,6 @@ RUN corepack enable pnpm
 
 RUN pnpm install
 
-CMD sleep 400000 && pnpm run unsafe:server
+CMD pnpm run unsafe:server
 
 EXPOSE 5173

@@ -13,6 +13,7 @@ import { Button } from "./components/Button/Button"
 import { Checkbox } from "./components/Checkbox/Checkbox"
 import { Container } from "./components/Container/Container"
 import { Dropdown } from "./components/Dropdown/Dropdown"
+import { Navbar } from "./components/Navbar/Navbar/Navbar"
 import { ProgressBar } from "./components/ProgressBar/ProgressBar"
 import { Radio } from "./components/Radio/Radio"
 import { Slider } from "./components/Slider/Slider"
@@ -35,5 +36,6 @@ export {
     Radio,
     Slider,
     Spacer,
-    TextBox
+    TextBox,
+    Navbar
 }

@@ -10,26 +10,8 @@
 "use strict"
 
 import { createRoot } from "react-dom/client"
-import { Button } from "../components/Button/Button.js"
 
-import "../index.css"
-import { Dropdown } from "../components/Dropdown/Dropdown.js"
-
-function App() {
-    return (
-        <>
-            <Button>
-                Hello, world
-            </Button>
-
-            <Dropdown label="Choose a value" items={[
-                { text: "Foo", value: "foo" },
-                { text: "Bar", value: "bar" },
-                { text: "Baz", value: "baz" }
-            ]} />
-        </>
-    )
-}
+import { App } from "./App"
 
 createRoot(document.getElementById("root")!)
     .render(
