@@ -24,7 +24,7 @@ build:
     artifacts:
         paths:
             - dist/
-        expire_in: 2 mins 30 sec
+        expire_in: 20 mins
 
 audit:
     stage: test
