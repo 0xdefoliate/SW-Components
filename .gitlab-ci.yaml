@@ -2,8 +2,9 @@ image: node:24.10.0-alpine
 
 workflow:
     rules:
-        -   if: $CI_COMMIT_BRANCH =~ /^release.*/ 
-        -   if: $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+        -   if: $CI_COMMIT_BRANCH =~ /^release.*/ && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+            when: always
+        -   when: never
 
 default:
     before_script:
