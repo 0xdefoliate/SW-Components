@@ -44,6 +44,7 @@ deploy:
     stage: deploy
     environment: production
     script:
+        - ls -a && exit 1
         - npm config set //registry.npmjs.org/:_authToken "${NPM_SOLIDWEATHER_ACCESS_TOKEN}"
         - npm publish --access public
     dependencies:
