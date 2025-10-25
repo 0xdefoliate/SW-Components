@@ -5,7 +5,7 @@
         "name": "Axel \"Foley\" Karlsson",
         "url": "https://axelkarlsson.se"
     },
-    "description": "A simple and tiny skeuomorphic React UI toolkit, mainly used for SolidWeather.",
+    "description": "A simple and tiny React UI toolkit, mainly used for SolidWeather.",
     "license": "MIT",
     "main": "dist/index.js",
     "type": "module",
@@ -29,6 +29,9 @@
         },
         "./style.css": "./dist/index.css"
     },
+    "files": [
+        "dist/"
+    ],
     "devDependencies": {
         "@eslint/js": "9.35.0",
         "@types/react": "19.1.12",
