@@ -1,0 +1,87 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "../../index.scss" as *;
+
+@mixin _active {
+    &:active:not(:disabled), &.__KEYBOARD_CLICK__ {
+        @content;
+    }
+}
+
+@mixin _button-border($colour) {
+    border: 1px solid $colour;
+    border-radius: get-colour(default-border-radius);
+    outline: none;
+}
+
+.#{$prefix}-Button {
+    font-family: var(--X-default-font-family), sans-serif;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    width: max-content;
+    padding: 12px;
+
+    cursor: pointer;
+    transition-property: background-color, box-shadow, border-color, filter, background;
+
+    color: get-colour(fg);
+
+    @include _button-border(get-colour(grey-500));
+
+    @include gradient(vertical, get-colour(bg), get-colour(grey-300));
+
+    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+
+    @include user-select(none);
+
+    @include if-prefers-dark {
+        @include gradient(vertical, get-colour(grey-300), get-colour(grey-100));
+    }
+
+    @include on-disabled;
+
+    &:disabled {
+        cursor: not-allowed;
+        filter: $filter-argument-on-disabled;
+    }
+
+    &:focus-visible {
+        box-shadow: 0 0 4px hsl(0, 0%, 50%);
+    }
+
+    &.fluid {
+        justify-content: center;
+        width: 100%;
+    }
+
+    @include _active {
+        @include gradient(vertical, get-colour(grey-400), get-colour(grey-300));
+
+        @include if-prefers-dark {
+            @include gradient(vertical, get-colour(grey-200), get-colour(grey-200));
+        }
+    }
+
+    &.primary {
+        color: white;
+
+        @include _button-border(get-colour(primary-brighter));
+
+        @include gradient(vertical, get-colour(primary-brighter), get-colour(primary));
+
+        &:focus-visible {
+            border-color: get-colour(grey-200);
+            outline: 1px solid get-colour(grey-600);
+        }
+
+        @include _active {
+            @include gradient(vertical, get-colour(primary), get-colour(primary-brighter));
+        }
+    }
+}

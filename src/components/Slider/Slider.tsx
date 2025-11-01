@@ -7,30 +7,88 @@
 
 "use strict"
 
-import "./Slider.css"
+import "./Slider.scss"
+import { useEffect, useRef, useState } from "react"
+import type { FormControlProps } from "../../index"
 
-export interface SliderProps {
-    label: string
+export interface SliderProps extends FormControlProps<HTMLInputElement, number, number> {
     range: [ number, number ]
-    onChange: (newValue: number) => void
-    value?: number
     step?: number
 }
 
-export function Slider({ label, range, onChange, value, step }: SliderProps) {
+export function Slider({ label, range, change, value, step, ref, disabled }: SliderProps) {
+
+    const sliderRef = useRef<HTMLInputElement>(null)
+
+    const [ internalValue, setInternalValue ] = useState<number>(range[0])
+
+    useEffect(() => {
+        const slider = ref?.current || sliderRef.current
+
+        slider?.style.setProperty("--cursor-type", "grab")
+
+        if (disabled) {
+            slider?.style.setProperty("--cursor-type", "not-allowed")
+        }
+
+        return () => {
+            slider?.style.removeProperty("--cursor-type")
+        }
+    }, [ disabled, ref ])
+
+    const injectValuesIntoText = (values: { [key: string]: string | number | undefined }, text: string) => {
+        let newText = text
+
+        for (const [ key, value ] of Object.entries(values)) {
+            newText = newText.replaceAll(key, String(value))
+        }
+
+        return newText
+    }
+
     return (
-        <label>
-            <div>
-                {label}
+        <label className="X-Slider-Wrapper">
+            <div className="X-Slider-Label">
+                {injectValuesIntoText({
+                    $progress: value ?? internalValue,
+                    $min: range[0],
+                    $max: range[1]
+                }, label as string)}
             </div>
             <input className="X-Slider"
+                // TODO: DRY up these handlers
+                   onMouseDown={() => {
+                       const slider = ref?.current || sliderRef.current
+                       if (!disabled) {
+                           slider?.style.setProperty("--cursor-type", "grabbing")
+                       } else {
+                           slider?.style.setProperty("--cursor-type", "not-allowed")
+                       }
+                   }}
+
+                   onMouseUp={() => {
+                       const slider = ref?.current || sliderRef.current
+                       if (!disabled) {
+                           slider?.style.setProperty("--cursor-type", "grab")
+                       } else {
+                           slider?.style.setProperty("--cursor-type", "not-allowed")
+                       }
+                   }}
+
                    type="range"
                    min={range[0]}
                    max={range[1]}
-                   value={value || range[0]}
+                   value={value ?? internalValue}
                    step={step || 1}
-                   onChange={e => onChange(parseInt(e.currentTarget.value))}
-                   aria-label={label}
+                   onChange={e => {
+                       if (change) {
+                           change(parseInt(e.currentTarget.value))
+                       } else {
+                           setInternalValue(parseInt(e.currentTarget.value))
+                       }
+                   }}
+                   disabled={disabled}
+                   ref={ref || sliderRef}
                    role="slider"
             />
         </label>

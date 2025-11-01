@@ -1,0 +1,42 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "../../../index" as *;
+
+.#{$prefix}-Radio-Wrapper {
+    display: inline flex;
+    align-items: center;
+    width: max-content;
+    gap: 4px;
+}
+
+.#{$prefix}-Radio {
+    position: relative;
+
+    width: 1.2rem;
+    height: 1.2rem;
+
+    margin: 0;
+
+    transition-property: border, box-shadow;
+
+    border-radius: 100%;
+
+    &:checked {
+        border: 6px solid get-colour(primary-brighter);
+    }
+
+    &:disabled,
+    &:disabled + label {
+        cursor: not-allowed;
+        filter: $filter-argument-on-disabled;
+    }
+
+    &:disabled:hover {
+        box-shadow: none;
+    }
+}

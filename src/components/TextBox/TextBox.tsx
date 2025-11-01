@@ -7,26 +7,38 @@
 
 "use strict"
 
-import type { BaseProps } from "../../index.js"
+import { useState } from "react"
+import type { FormControlProps } from "../../index.js"
 
-import "./TextBox.css"
+import "./TextBox.scss"
 
-export interface TextBoxProps extends BaseProps<HTMLInputElement> {
-    value: string,
-    onInput: (newValue: string) => void,
+export interface TextBoxProps extends FormControlProps<HTMLInputElement, string, string> {
+    placeholder?: string
     subType?: "email" | "search" | "password" | "tel" | "url"
 }
 
-export function TextBox({ label, value, onInput, subType }: TextBoxProps) {
+export function TextBox({ label, value, change, disabled, placeholder, subType }: TextBoxProps) {
+
+    // This state is only used if no `value` is provided.
+    const [ internalValue, setInternalValue ] = useState<string>("")
+
     return (
-        <label>
+        <label className="X-TextInput-Wrapper">
             <div>
                 {label}
             </div>
             <input className="X-TextInput"
                    type={subType ?? "text"}
-                   value={value}
-                   onInput={(event) => onInput(event.currentTarget.value)} />
+                   value={value ?? internalValue}
+                   disabled={disabled}
+                   placeholder={placeholder}
+                   onInput={event => {
+                       if (change) {
+                           change(event.currentTarget.value)
+                       } else {
+                           setInternalValue(event.currentTarget.value)
+                       }
+                   }} />
         </label>
     )
 }

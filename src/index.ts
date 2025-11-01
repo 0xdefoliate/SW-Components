@@ -12,19 +12,25 @@ import type { RefObject } from "react"
 import { Button } from "./components/Button/Button"
 import { Checkbox } from "./components/Checkbox/Checkbox"
 import { Container } from "./components/Container/Container"
-import { Dropdown } from "./components/Dropdown/Dropdown"
+import { Dropdown } from "./components/Dropdown/components/Dropdown/Dropdown"
 import { Navbar } from "./components/Navbar/Navbar/Navbar"
 import { ProgressBar } from "./components/ProgressBar/ProgressBar"
-import { Radio } from "./components/Radio/Radio"
+import { Radio } from "./components/Radio/Radio/Radio"
 import { Slider } from "./components/Slider/Slider"
 import { Spacer } from "./components/Spacer/Spacer"
 import { TextBox } from "./components/TextBox/TextBox"
 
-import "./index.css"
+import "./index.scss"
 
 export interface BaseProps<T> {
     ref?: RefObject<T | null>
-    label?: string
+}
+
+export interface FormControlProps<TElement, TValue, TChangeNewValue> extends BaseProps<TElement> {
+    label: string
+    value?: TValue
+    change?: (newValue: TChangeNewValue) => void
+    disabled?: boolean
 }
 
 export {
