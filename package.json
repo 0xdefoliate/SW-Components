@@ -1,6 +1,6 @@
 {
     "name": "@solidweather/components",
-    "version": "0.3.2",
+    "version": "0.4.0",
     "author": {
         "name": "Axel \"Foley\" Karlsson",
         "url": "https://axelkarlsson.se"
@@ -15,7 +15,10 @@
         "docker:lint": "docker compose up lint-job && docker compose down lint-job --rmi all",
         "unsafe:lint": "eslint .",
         "unsafe:build": "rm -rf dist/* && vite build && tsc --project tsconfig.json && rm -rf dist/dev",
-        "unsafe:server": "vite"
+        "unsafe:server": "vite",
+        "version:bump:major": "npm version major --git-tag-version false",
+        "version:bump:minor": "npm version minor --git-tag-version false",
+        "version:bump:patch": "npm version patch --git-tag-version false"
     },
     "repository": {
         "type": "git",
