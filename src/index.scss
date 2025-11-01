@@ -1,0 +1,263 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "sass:map";
+
+@mixin user-select($value) {
+    -moz-user-select: $value;
+    -ms-user-select: $value;
+    -webkit-user-select: $value;
+    user-select: $value;
+}
+
+@mixin gradient($type, $start-color, $end-color) {
+    @if $type != "horizontal" and $type != "vertical" {
+        @warn "Unknown type '#{type}'";
+    }
+
+    $degrees: 180deg;
+
+    @if $type == "horizontal" {
+        $degrees: 90deg;
+    }
+
+    background: linear-gradient($degrees, $start-color, $end-color);
+}
+
+@mixin shadow($x: 2px, $y: 2px, $blur: 4px, $alpha: 0.4, $inset: false) {
+
+    $arg: $x $y $blur rgba(0, 0, 0, $alpha);
+
+    @if $inset {
+        box-shadow: $arg inset
+    } @else {
+        box-shadow: $arg;
+    }
+}
+
+@mixin if-prefers-dark {
+    @media (prefers-color-scheme: dark) {
+        @content
+    }
+}
+
+@mixin if-hover {
+    @media (hover: hover) {
+        &:hover {
+            @content;
+        }
+    }
+}
+
+@mixin if-disabled {
+    &:disabled,
+    &.disabled {
+        @content;
+    }
+}
+
+@mixin appearance($value) {
+    -webkit-appearance: $value;
+    appearance: $value;
+}
+
+@mixin on-disabled {
+}
+
+$prefix: X;
+$mobile-width: 650px;
+$filter-argument-on-disabled: contrast(0.6);
+
+@function get-colour($colour-name) {
+    @return var(--#{$prefix}-#{$colour-name});
+}
+
+:root {
+    @mixin reflect-grey-colours($map, $theme) {
+        @each $key, $lightness in map.get($map, $theme) {
+            --#{$prefix}-#{$key}: hsl(0, 0%, #{$lightness});
+        }
+    }
+
+    /*
+     * Fonts
+     */
+
+    /* NOTE: A fallback font is never assigned here they are defined in the components' respective CSS. */
+    --#{$prefix}-default-font-family: "Lucida Grande", "Helvetica Neue", system-ui;
+    --#{$prefix}-default-font-size: 1rem;
+
+    /*
+     * Colours
+     */
+
+    --#{$prefix}-fg: black;
+    --#{$prefix}-bg: white;
+
+    --#{$prefix}-bg-dark-dim: rgb(30, 30, 30);
+
+    --#{$prefix}-primary: rgb(0, 100, 255);
+    --#{$prefix}-primary-brighter: rgb(0, 150, 255);
+    --#{$prefix}-primary-darker: rgb(0, 50, 255);
+
+    $greys: (
+        light: (
+            grey-100: 95%,
+            grey-200: 85%,
+            grey-300: 75%,
+            grey-400: 65%,
+            grey-500: 55%,
+            grey-600: 45%,
+            grey-700: 35%,
+            grey-800: 25%,
+            grey-900: 15%
+        ),
+        dark: (
+            grey-100: 15%,
+            grey-200: 25%,
+            grey-300: 35%,
+            grey-400: 45%,
+            grey-500: 55%,
+            grey-600: 65%,
+            grey-700: 75%,
+            grey-800: 85%,
+            grey-900: 95%
+        )
+    );
+
+    @include reflect-grey-colours($greys, light);
+
+    /* Invert the `grey-*` variables in dark-mode. */
+    @include if-prefers-dark {
+        --X-fg: white;
+        --X-bg: black;
+
+        @include reflect-grey-colours($greys, dark);
+    }
+
+
+    /*
+     * Accessibility
+     */
+
+    --#{$prefix}-transition-duration: 0.2s;
+
+    @media (prefers-reduced-motion: reduce) {
+        --#{$prefix}-transition-duration: 0ms;
+    }
+
+    /*
+     * Other
+     */
+
+    --#{$prefix}-default-border-radius: 6px;
+
+    /*
+     * Navbar
+     */
+
+    --#{$prefix}-navbar-height: 10vh;
+    --#{$prefix}-navbar-brand-font-family: system-ui;
+
+    --#{$prefix}-navbar-gradient-start-color: var(--#{$prefix}-grey-100);
+    --#{$prefix}-navbar-gradient-end-color: var(--#{$prefix}-grey-200);
+
+    @include if-prefers-dark {
+        --#{$prefix}-navbar-gradient-start-color: hsl(0, 0%, 30%);
+        --#{$prefix}-navbar-gradient-end-color: hsl(0, 0%, 20%)
+    }
+}
+
+* {
+    box-sizing: border-box;
+    transition-duration: var(--#{$prefix}-transition-duration) !important;
+
+    transition-property: box-shadow, border-color;
+
+    color-scheme: light dark;
+}
+
+body {
+    font-family: var(--#{$prefix}-default-font-family), sans-serif;
+
+    width: 100dvw;
+    height: 100dvh;
+
+    margin: 0;
+
+    padding: 0;
+    color: get-colour(fg);
+
+    background-color: get-colour(bg);
+    @include if-prefers-dark {
+        background-color: get-colour(bg-dark-dim);
+    }
+}
+
+
+input[class^="#{$prefix}"], .#{$prefix}-Dropdown, .#{$prefix}-ProgressBar, .#{$prefix}-Checkbox {
+
+    color: get-colour(fg);
+    border: 1px solid get-colour(grey-400);
+
+    @include gradient(vertical, get-colour(grey-200), get-colour(grey-100));
+    @include appearance(none);
+
+    @include if-prefers-dark {
+        border-color: get-colour(grey-500);
+        @include gradient(vertical, get-colour(grey-100), get-colour(grey-200));
+    }
+
+    &:disabled,
+    &[aria-disabled="true"] {
+        cursor: not-allowed;
+        filter: $filter-argument-on-disabled;
+    }
+}
+
+@media (hover: hover) {
+    input[class^="#{$prefix}"]:not(:disabled):hover, .#{$prefix}-Dropdown:not(.disabled):hover {
+        $shadow-x: 0;
+        $shadow-y: 0;
+        $shadow-blur: 6px;
+
+        @include shadow($shadow-x, $shadow-y, $shadow-blur, 0.2, true);
+
+        @include if-prefers-dark {
+            @include shadow($shadow-x, $shadow-y, $shadow-blur, get-colour(grey-600), true);
+        }
+    }
+}
+
+input[class^="#{$prefix}"]:focus-visible, .#{$prefix}-Dropdown:focus-visible {
+    border-color: var(--#{$prefix}-primary-brighter);
+}
+
+label {
+    @include user-select(none);
+
+    display: block;
+    width: max-content;
+}
+
+a:not([class]) {
+    @include gradient(horizontal, get-colour(primary-brighter), get-colour(primary));
+    width: max-content;
+    text-decoration: none;
+    color: transparent;
+    background-clip: text;
+    text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
+
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+:focus-visible {
+    border-color: get-colour(primary);
+    outline: 1px solid get-colour(primary-brighter);
+}

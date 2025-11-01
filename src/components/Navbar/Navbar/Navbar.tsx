@@ -5,13 +5,18 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import type { ReactNode } from "react"
+import { type ReactNode } from "react"
 
-import "./Navbar.css"
+import "./Navbar.scss"
+
+export interface NavbarProps {
+    brand: string,
+    children?: ReactNode
+}
 
 // TODO: Document this component with JSDoc (and other components as well)
 
-export function Navbar({ brand, children, final }: { brand: string, children?: ReactNode, final?: ReactNode }) {
+export function Navbar({ brand, children }: NavbarProps) {
 
     // Basically, if the brand looks something along the likes of: "Example Brand:https://example.com",
     // then this variable below should capture that.
@@ -24,14 +29,13 @@ export function Navbar({ brand, children, final }: { brand: string, children?: R
         const separatorIndex = brand.indexOf(":")
         brandName = brand.substring(0, separatorIndex)
         brandURL = brand.substring(separatorIndex + 1)
-        console.log(brandURL)
     }
 
     return (
         <nav className="X-Navbar" role="navigation">
             <div className="navbar-brand-and-items">
                 <div className="navbar-brand">
-                    <a href={brandContainsURL ? brandURL : "#"}>
+                    <a href={brandContainsURL ? brandURL : "#"} className="navbar-brand-link">
                         {brandName}
                     </a>
                 </div>
@@ -40,12 +44,6 @@ export function Navbar({ brand, children, final }: { brand: string, children?: R
                     {children}
                 </ul>
             </div>
-
-            {final && (
-                <div className="navbar-final-item">
-                    {final}
-                </div>
-            )}
         </nav>
     )
 }

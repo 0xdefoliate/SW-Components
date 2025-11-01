@@ -1,23 +1,14 @@
-/*
+/*!
  * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
  *
  * Use of this source code is governed by the MIT License, which you may
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-.X-Container {
+@use "../../../index.scss" as *;
+
+.#{$prefix}-RadioGroup {
     display: flex;
-    gap: 8px;
-}
-
-.X-Container.vertical {
     flex-direction: column;
-}
-
-.X-Container:not(.vertical).centre {
-    align-items: center;
-}
-
-.X-Container:not(.vertical).centre {
-    justify-content: center;
+    gap: 8px;
 }

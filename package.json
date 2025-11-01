@@ -1,11 +1,11 @@
 {
     "name": "@solidweather/components",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "author": {
         "name": "Axel \"Foley\" Karlsson",
         "url": "https://axelkarlsson.se"
     },
-    "description": "A simple and tiny skeuomorphic React UI toolkit, mainly used for SolidWeather.",
+    "description": "A simple and tiny React UI toolkit, mainly used for SolidWeather.",
     "license": "MIT",
     "main": "dist/index.js",
     "type": "module",
@@ -15,7 +15,10 @@
         "docker:lint": "docker compose up lint-job && docker compose down lint-job --rmi all",
         "unsafe:lint": "eslint .",
         "unsafe:build": "rm -rf dist/* && vite build && tsc --project tsconfig.json && rm -rf dist/dev",
-        "unsafe:server": "vite"
+        "unsafe:server": "vite",
+        "version:bump:major": "npm version major --git-tag-version false",
+        "version:bump:minor": "npm version minor --git-tag-version false",
+        "version:bump:patch": "npm version patch --git-tag-version false"
     },
     "repository": {
         "type": "git",
@@ -29,19 +32,24 @@
         },
         "./style.css": "./dist/index.css"
     },
+    "files": [
+        "dist/"
+    ],
     "devDependencies": {
         "@eslint/js": "9.35.0",
         "@types/react": "19.1.12",
         "@types/react-dom": "19.1.9",
         "@vitejs/plugin-react": "4.7.0",
+        "babel-plugin-react-compiler": "^1.0.0",
         "eslint": "9.35.0",
         "eslint-plugin-react-hooks": "5.2.0",
         "eslint-plugin-react-refresh": "0.4.20",
         "globals": "16.4.0",
+        "react": "19.1.1",
+        "react-dom": "19.1.1",
+        "sass": "1.93.2",
         "typescript": "5.8.3",
         "typescript-eslint": "8.43.0",
-        "vite": "7.1.11",
-        "react": "19.1.1",
-        "react-dom": "19.1.1"
+        "vite": "7.1.11"
     }
 }

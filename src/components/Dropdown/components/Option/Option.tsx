@@ -1,0 +1,77 @@
+/*
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+import { memo, useContext, useEffect, useRef, useState } from "react"
+import { DropdownContext } from "../../DropdownContext"
+
+import "./Option.scss"
+
+export const Option = memo(function ({ text, selected, id }: {
+    text: string,
+    selected?: boolean
+    id?: string
+}) {
+    const context = useContext(DropdownContext)
+
+    const [ hasToldParentOptionIsSelected, setHasToldParentOptionIsSelected ] = useState<boolean>(false)
+
+    if (!context) {
+        throw Error("Value `context` needs to be defined")
+    }
+
+    const ref = useRef<HTMLLIElement>(null)
+
+    const { handleOptionSelected, isSelected } = context
+
+    // This variable is different from the one without underscore
+    // since this variable's value is a response from the parent
+    // whether this `Option` currently is selected, and not that
+    // the library consumer intends to have this as default.
+    //
+    // (I should probably change the name of the public prop, but oh well)
+    const _selected = isSelected(id ?? "")
+
+    useEffect(() => {
+        // Choose this dropdown `Option` if the consumer wants this to be selected by default.
+        if (!hasToldParentOptionIsSelected && selected && id) {
+            handleOptionSelected(ref, true)
+
+            // This prevents a bug which occurs when the following occurs:
+            //
+            // 1) An `Option` has the `selected` prop set to `true`.
+            // 2) The user tries to select something which is not the default
+            //
+            // The solution is to keep track of whether this effect has been run, andxxx
+            // block it from re-running.
+            setHasToldParentOptionIsSelected(true)
+        }
+    }, [ handleOptionSelected, isSelected, hasToldParentOptionIsSelected, selected, id ])
+
+    return (
+        <li className="X-Dropdown-Option"
+            id={id}
+            ref={ref}
+            onClick={() => handleOptionSelected(ref)}
+            onKeyDown={e => e.key == "Enter" && handleOptionSelected(ref)}
+            role="option"
+            aria-selected={_selected}
+            tabIndex={-1}>
+            <span className="X-Dropdown-Option-Check-Indicator" aria-hidden="true">
+                {_selected && (
+                    <svg xmlns="http://www.w3.org/2000/svg"
+                         width="16"
+                         height="16"
+                         fill="var(--X-grey-900)"
+                         viewBox="0 0 16 16">
+                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
+                    </svg>
+                )}
+            </span>
+            {text}
+        </li>
+    )
+})

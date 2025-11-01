@@ -1,0 +1,33 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "../../index.scss" as *;
+
+.#{$prefix}-Container {
+    display: flex;
+    flex-wrap: wrap;
+
+    box-sizing: border-box;
+
+    gap: 1rem;
+
+    &.vertical {
+        flex-direction: column;
+
+        &.centre {
+            align-self: center;
+        }
+    }
+
+    &.centre {
+        justify-content: center;
+    }
+
+    &.inline {
+        display: inline-flex;
+    }
+}

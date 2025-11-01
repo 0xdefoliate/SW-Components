@@ -2,7 +2,9 @@ image: node:24.10.0-alpine
 
 workflow:
     rules:
-        -   if: $CI_COMMIT_BRANCH =~ /^release.*/
+        -   if: $CI_COMMIT_BRANCH =~ /^release.*/ && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "main"
+            when: always
+        -   when: never
 
 default:
     before_script:
@@ -11,27 +13,15 @@ default:
         - npm i
 
 stages:
-    - build
     - test
     - deploy
 
 ### JOBS ###
 
-build:
-    stage: build
-    script:
-        - npm run unsafe:build
-    artifacts:
-        paths:
-            - dist/
-        expire_in: 2 mins 30 sec
-
 audit:
     stage: test
     script:
         - npm audit
-    dependencies:
-        - build
 
 lint:
     stage: test
@@ -44,6 +34,7 @@ deploy:
     stage: deploy
     environment: production
     script:
+        - npm run unsafe:build
         - npm config set //registry.npmjs.org/:_authToken "${NPM_SOLIDWEATHER_ACCESS_TOKEN}"
         - npm publish --access public
     dependencies:

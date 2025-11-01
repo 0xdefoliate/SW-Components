@@ -7,7 +7,7 @@
 
 import type { ReactNode } from "react"
 
-import "./NavItem.css"
+import "./NavItem.scss"
 
 export function NavItem({ children }: { children: ReactNode }) {
     return (

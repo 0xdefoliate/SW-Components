@@ -1,0 +1,65 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "../../../index.scss" as *;
+
+.#{$prefix}-Navbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    height: var(--#{$prefix}-navbar-height);
+    min-height: 4rem;
+    @include gradient(vertical, get-colour(navbar-gradient-start-color), get-colour(navbar-gradient-end-color));
+    @include shadow(1px, 1px, 4px, 0.3);
+}
+
+.#{$prefix}-Navbar > .navbar-brand-and-items {
+    display: flex;
+    align-items: center;
+    width: max-content;
+    height: 100%;
+    gap: 1.5rem;
+}
+
+.#{$prefix}-Navbar .navbar-brand {
+    @include user-select(none);
+    font-family: var(--#{$prefix}-navbar-brand-font-family), sans-serif;
+    font-size: 2.25rem;
+    padding-left: 1.5rem;
+}
+
+.#{$prefix}-Navbar .navbar-brand > a {
+    text-decoration: none;
+    color: inherit;
+}
+
+.#{$prefix}-Navbar .navbar-items {
+    font-size: 1.15rem;
+    display: flex;
+    width: max-content;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    list-style-type: none;
+    gap: 16px;
+}
+
+@media (max-width: $mobile-width) {
+    .#{$prefix}-Navbar > .navbar-brand {
+        padding-right: 2rem;
+    }
+
+    .#{$prefix}-Navbar > .navbar-brand {
+        font-size: 1.75rem;
+        padding-right: 1.5rem;
+    }
+
+    .#{$prefix}-Navbar > .navbar-items {
+        font-size: 0.85rem;
+    }
+}

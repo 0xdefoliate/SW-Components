@@ -9,27 +9,30 @@
 
 import { useId, useState } from "react"
 import type { BaseProps } from "../../index.js"
-import { Container } from "../Container/Container.js"
 
-import "./Checkbox.css"
+import "./Checkbox.scss"
 
 export interface CheckboxProps extends BaseProps<HTMLDivElement> {
-    change: (checked: boolean) => void,
-    disabled?: boolean,
-    defaultValue?: boolean,
+    label: string
+    checked?: boolean
+    change?: (newValue: boolean) => void
+    disabled?: boolean
 }
 
-export function Checkbox({ change, label, ref, disabled, defaultValue }: CheckboxProps) {
-    const [ checked, setChecked ] = useState<boolean>(!!defaultValue)
+export function Checkbox({ label, checked, change, disabled, ref }: CheckboxProps) {
+    const [ value, setValue ] = useState<boolean>(!!checked)
 
     const onChange = () => {
-
         if (disabled) {
             return
         }
 
-        setChecked(!checked)
-        change(checked)
+        const newValue = !value
+        setValue(newValue)
+
+        if (change) {
+            change(newValue)
+        }
     }
 
     let className = "X-Checkbox"
@@ -42,20 +45,21 @@ export function Checkbox({ change, label, ref, disabled, defaultValue }: Checkbo
     const labelId = useId()
 
     return (
-        <Container gap={4} centre>
+        <div className="X-Checkbox-Wrapper">
             <div className={className}
                  id={checkBoxId}
                  aria-labelledby={labelId}
-                 aria-label={label}
-                 aria-checked={checked}
-                 tabIndex={0}
+                 aria-checked={value}
+                // The checkbox should not be tabbable if it's disabled
+                 tabIndex={disabled ? undefined : 0}
                  role="checkbox"
                  onClick={onChange}
                  onKeyDown={e => e.key === "Enter" && onChange()}
                  ref={ref}
                  aria-disabled={disabled}>
-                {checked && (
+                {value && (
                     <svg className="X-Checkbox-Checkmark"
+                         aria-hidden="true"
                          xmlns="http://www.w3.org/2000/svg"
                          width="16"
                          height="16"
@@ -73,6 +77,6 @@ export function Checkbox({ change, label, ref, disabled, defaultValue }: Checkbo
                    }}>
                 {label}
             </label>
-        </Container>
+        </div>
     )
 }

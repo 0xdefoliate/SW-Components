@@ -7,19 +7,22 @@
 
 "use strict"
 
-import type { ReactNode } from "react"
+import { type ReactNode, useRef } from "react"
 import type { BaseProps } from "../../index.js"
 
-import "./Button.css"
+import "./Button.scss"
 
 export interface ButtonProps extends BaseProps<HTMLButtonElement> {
     children?: ReactNode
     primary?: boolean
     click?: () => void
     disabled?: boolean
+    fluid?: boolean
 }
 
-export function Button({ children, primary, click, disabled, ref }: ButtonProps) {
+export function Button({ children, primary, click, disabled, ref, fluid }: ButtonProps) {
+
+    const buttonRef = useRef<HTMLButtonElement>(null)
 
     let className = "X-Button"
 
@@ -27,12 +30,34 @@ export function Button({ children, primary, click, disabled, ref }: ButtonProps)
         className += " primary"
     }
 
+    if (fluid) {
+        className += " fluid"
+    }
+
     return (
         <button className={className}
                 onClick={click}
-                ref={ref}
+                ref={ref ?? buttonRef}
                 disabled={disabled}
-                aria-disabled={disabled}>
+                aria-disabled={disabled}
+                onKeyDown={e => {
+                    if (e.key !== "Enter") return
+
+                    const button = ref?.current ?? buttonRef.current
+
+                    if (button) {
+                        button.classList.add("__KEYBOARD_CLICK__")
+                    }
+                }}
+                onKeyUp={e => {
+                    if (e.key !== "Enter") return
+
+                    const button = ref?.current ?? buttonRef.current
+
+                    if (button) {
+                        button.classList.remove("__KEYBOARD_CLICK__")
+                    }
+                }}>
             {children}
         </button>
     )

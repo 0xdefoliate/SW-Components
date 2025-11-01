@@ -1,0 +1,51 @@
+/*
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "../../index.scss" as *;
+
+.#{$prefix}-Checkbox-Wrapper {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.#{$prefix}-Checkbox {
+
+    @mixin is-checked {
+        &:has(> .#{$prefix}-Checkbox-Checkmark) {
+            @content;
+        }
+    }
+
+    box-sizing: content-box;
+
+    width: 1.4rem;
+    height: 1.4rem;
+
+    &:disabled,
+    &.disabled, {
+        cursor: not-allowed;
+        filter: $filter-argument-on-disabled;
+    }
+
+    &.disabled + label {
+        cursor: not-allowed;
+    }
+
+    @include is-checked {
+        border-color: get-colour(grey-700);
+        background: linear-gradient(20deg, get-colour(primary), get-colour(primary-brighter));
+    }
+}
+
+.#{$prefix}-Checkbox-Checkmark {
+    width: 100%;
+    height: 100%;
+
+    vertical-align: -8px;
+    color: white;
+}
