@@ -5,12 +5,12 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import { memo, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { DropdownContext } from "../../DropdownContext"
 
 import "./Option.scss"
 
-export const Option = memo(function ({ text, selected, id }: {
+export function Option({ text, selected, id }: {
     text: string,
     selected?: boolean
     id?: string
@@ -74,4 +74,4 @@ export const Option = memo(function ({ text, selected, id }: {
             {text}
         </li>
     )
-})
+}
