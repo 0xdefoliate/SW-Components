@@ -10,7 +10,7 @@ import { DropdownContext } from "../../DropdownContext"
 
 import "./Option.scss"
 
-export const Option = memo(function ({ text, selected, id }: {
+export function Option({ text, selected, id }: {
     text: string,
     selected?: boolean
     id?: string
@@ -74,4 +74,4 @@ export const Option = memo(function ({ text, selected, id }: {
             {text}
         </li>
     )
-})
+}
