@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import { memo, useContext, useEffect, useRef, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { DropdownContext } from "../../DropdownContext"
 
 import "./Option.scss"
