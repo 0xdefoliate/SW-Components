@@ -13,9 +13,12 @@ import { Button } from "./components/Button/Button"
 import { Checkbox } from "./components/Checkbox/Checkbox"
 import { Container } from "./components/Container/Container"
 import { Dropdown } from "./components/Dropdown/components/Dropdown/Dropdown"
+import { Option } from "./components/Dropdown/components/Option/Option"
 import { Navbar } from "./components/Navbar/Navbar/Navbar"
+import { NavItem } from "./components/Navbar/NavItem/NavItem"
 import { ProgressBar } from "./components/ProgressBar/ProgressBar"
 import { Radio } from "./components/Radio/Radio/Radio"
+import { RadioGroup } from "./components/Radio/RadioGroup/RadioGroup"
 import { Slider } from "./components/Slider/Slider"
 import { Spacer } from "./components/Spacer/Spacer"
 import { TextBox } from "./components/TextBox/TextBox"
@@ -43,5 +46,8 @@ export {
     Slider,
     Spacer,
     TextBox,
-    Navbar
+    Navbar,
+    NavItem,
+    Option,
+    RadioGroup
 }
