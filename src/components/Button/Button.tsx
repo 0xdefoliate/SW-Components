@@ -5,14 +5,12 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
-
-import { type ReactNode, useRef } from "react"
-import type { BaseProps } from "../../index.js"
+import { type JSX, type ReactNode, useRef } from "react"
+import { getClassName } from "../../internal/helpers/getClassName"
 
 import "./Button.scss"
 
-export interface ButtonProps extends BaseProps<HTMLButtonElement> {
+export interface ButtonProps {
     children?: ReactNode
     primary?: boolean
     click?: () => void
@@ -20,43 +18,37 @@ export interface ButtonProps extends BaseProps<HTMLButtonElement> {
     fluid?: boolean
 }
 
-export function Button({ children, primary, click, disabled, ref, fluid }: ButtonProps) {
+export function Button({ children, primary, click, disabled, fluid }: ButtonProps): JSX.Element {
 
     const buttonRef = useRef<HTMLButtonElement>(null)
 
-    let className = "X-Button"
-
-    if (primary) {
-        className += " primary"
-    }
-
-    if (fluid) {
-        className += " fluid"
-    }
+    const className = getClassName({
+        base: "Button",
+        appendConditionally: {
+            primary,
+            fluid
+        }
+    })
 
     return (
         <button className={className}
                 onClick={click}
-                ref={ref ?? buttonRef}
+                ref={buttonRef}
                 disabled={disabled}
                 aria-disabled={disabled}
                 onKeyDown={e => {
-                    if (e.key !== "Enter") return
-
-                    const button = ref?.current ?? buttonRef.current
-
-                    if (button) {
-                        button.classList.add("__KEYBOARD_CLICK__")
+                    if (e.key !== "Enter" || !buttonRef.current) {
+                        return
                     }
+
+                    buttonRef.current.classList.add("__KEYBOARD_CLICK__")
                 }}
                 onKeyUp={e => {
-                    if (e.key !== "Enter") return
-
-                    const button = ref?.current ?? buttonRef.current
-
-                    if (button) {
-                        button.classList.remove("__KEYBOARD_CLICK__")
+                    if (e.key !== "Enter" || !buttonRef.current) {
+                        return
                     }
+
+                    buttonRef.current.classList.remove("__KEYBOARD_CLICK__")
                 }}>
             {children}
         </button>

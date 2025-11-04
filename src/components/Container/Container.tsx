@@ -5,11 +5,10 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
-
-import { type CSSProperties, type ReactNode } from "react"
+import { type CSSProperties, type JSX, type ReactNode } from "react"
 
 import "./Container.scss"
+import { getClassName } from "../../internal/helpers/getClassName"
 
 export interface ContainerProps {
     children: ReactNode
@@ -17,6 +16,10 @@ export interface ContainerProps {
     centre?: boolean
     center?: boolean
     gap?: number
+    paddingTop?: number
+    paddingRight?: number
+    paddingBottom?: number
+    paddingLeft?: number
     padding?: number
     inline?: boolean
     width?: number | string
@@ -31,30 +34,34 @@ export function Container({
     centre,
     center,
     gap,
+    paddingTop,
+    paddingRight,
+    paddingBottom,
+    paddingLeft,
     padding,
     inline,
     width,
     minWidth,
     maxWidth,
     flex
-}: ContainerProps) {
+}: ContainerProps): JSX.Element {
 
-    let className = "X-Container"
-
-    if (vertical) {
-        className += " vertical"
-    }
-
-    if (centre || center) {
-        className += " centre"
-    }
-
-    if (inline) {
-        className += " inline"
-    }
+    const className = getClassName({
+        base: "Container",
+        appendConditionally: {
+            vertical,
+            // Order matters here. Don't change this to the bottom, even if it's tempting
+            centre: centre || center,
+            inline
+        }
+    })
 
     const style: CSSProperties = {
         gap: gap && `${gap}px`,
+        paddingTop: paddingTop && `${paddingTop}px`,
+        paddingRight: paddingRight && `${paddingRight}px`,
+        paddingBottom: paddingBottom && `${paddingBottom}px`,
+        paddingLeft: paddingLeft && `${paddingLeft}px`,
         padding: padding && `${padding}px`,
         width: "100%", // <-- Default value
         minWidth,

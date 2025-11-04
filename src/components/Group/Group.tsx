@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import type { ReactNode } from "react"
+import type { JSX, ReactNode } from "react"
 
 import "./Group.scss"
 
@@ -14,7 +14,7 @@ export interface GroupProps {
     children: ReactNode
 }
 
-export function Group({ legend, children }: GroupProps) {
+export function Group({ legend, children }: GroupProps): JSX.Element {
     return (
         <fieldset className="X-Group">
             <legend>

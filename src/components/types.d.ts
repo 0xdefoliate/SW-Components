@@ -5,11 +5,9 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import { createContext } from "react"
-
-export interface TRadioContext {
-    name?: string
-    change?: (arg: { key: string, checked: boolean }) => void
+export interface FormControlProps<TValue, TChangeNewValue> {
+    label: string
+    value?: TValue
+    change?: (newValue: TChangeNewValue) => void
+    disabled?: boolean
 }
-
-export const RadioContext = createContext<TRadioContext>({})

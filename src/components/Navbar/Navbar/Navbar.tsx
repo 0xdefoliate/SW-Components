@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import { type ReactNode } from "react"
+import { type JSX, type ReactNode } from "react"
 
 import "./Navbar.scss"
 
@@ -16,10 +16,10 @@ export interface NavbarProps {
 
 // TODO: Document this component with JSDoc (and other components as well)
 
-export function Navbar({ brand, children }: NavbarProps) {
+export function Navbar({ brand, children }: NavbarProps): JSX.Element {
 
     // Basically, if the brand looks something along the likes of: "Example Brand:https://example.com",
-    // then this variable below should capture that.
+    // Then this variable below should capture that.
     const brandContainsURL = brand.includes(":") && !brand.startsWith(":") && !brand.endsWith(":")
 
     let brandName: string | undefined = brand

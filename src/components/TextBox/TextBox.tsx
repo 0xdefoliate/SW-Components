@@ -5,19 +5,17 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
-
-import { useState } from "react"
-import type { FormControlProps } from "../../index.js"
+import { type JSX, useState } from "react"
+import type { FormControlProps } from "../types"
 
 import "./TextBox.scss"
 
-export interface TextBoxProps extends FormControlProps<HTMLInputElement, string, string> {
+export interface TextBoxProps extends FormControlProps<string, string> {
     placeholder?: string
     subType?: "email" | "search" | "password" | "tel" | "url"
 }
 
-export function TextBox({ label, value, change, disabled, placeholder, subType }: TextBoxProps) {
+export function TextBox({ label, value, change, disabled, placeholder, subType }: TextBoxProps): JSX.Element {
 
     // This state is only used if no `value` is provided.
     const [ internalValue, setInternalValue ] = useState<string>("")

@@ -5,9 +5,9 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
+import { type JSX } from "react"
 
-export function Spacer({ size }: { size?: "large" | "medium" | "small" }) {
+export function Spacer({ size }: { size?: "large" | "medium" | "small" }): JSX.Element {
 
     let pixels: number
 
@@ -26,7 +26,7 @@ export function Spacer({ size }: { size?: "large" | "medium" | "small" }) {
     }
 
     return (
-        <div className="spacer" aria-hidden={true} style={{
+        <div aria-hidden={true} style={{
             height: `${pixels}px`
         }}></div>
     )

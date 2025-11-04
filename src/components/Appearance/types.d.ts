@@ -5,11 +5,5 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import { createContext } from "react"
-
-export interface TRadioContext {
-    name?: string
-    change?: (arg: { key: string, checked: boolean }) => void
-}
-
-export const RadioContext = createContext<TRadioContext>({})
+export type AppearanceTheme = "aquatic" | "flat" | "native"
+export type AppearanceMode = "light" | "dark" | "auto"

@@ -7,13 +7,14 @@
 
 // This file is a playground for testing components.
 
-"use strict"
-
 import { createRoot } from "react-dom/client"
+import { Appearance } from "../components/Appearance/Appearance"
 
 import { App } from "./App"
 
-createRoot(document.getElementById("root")!)
+createRoot(document.getElementById("root") as HTMLElement)
     .render(
-        <App />
+        <Appearance>
+            <App />
+        </Appearance>
     )

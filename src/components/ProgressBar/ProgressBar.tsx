@@ -5,12 +5,10 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
-
 import "./ProgressBar.scss"
-import { useEffect, useRef } from "react"
+import { type JSX, useEffect, useRef } from "react"
 
-export function ProgressBar({ progress }: { progress: number }) {
+export function ProgressBar({ progress }: { progress: number }): JSX.Element {
 
     const progressTrackRef = useRef<HTMLSpanElement>(null)
 
@@ -18,17 +16,24 @@ export function ProgressBar({ progress }: { progress: number }) {
     const _progress = progress > 100 ? 100 : progress
 
     useEffect(() => {
-        if (!progressTrackRef.current) return
+        if (!progressTrackRef.current) {
+            return
+        }
 
         type ProgressState = "nearly-empty" | "nearly-full" | "full" | "reset" | "one-percent"
 
-        const setProgressState = (state: ProgressState) => {
-            const classNames: ProgressState[] = [ "one-percent", "nearly-empty", "nearly-full", "full", "one-percent" ]
+        const setProgressState = (state: ProgressState): void => {
 
-            progressTrackRef.current!.classList.remove(...classNames)
+            if (!progressTrackRef.current) {
+                return
+            }
+
+            const classNames: Array<ProgressState> = [ "one-percent", "nearly-empty", "nearly-full", "full", "one-percent" ]
+
+            progressTrackRef.current.classList.remove(...classNames)
 
             if (state !== "reset") {
-                progressTrackRef.current!.classList.add(state)
+                progressTrackRef.current.classList.add(state)
             }
         }
 

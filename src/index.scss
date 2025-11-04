@@ -198,7 +198,6 @@ body {
     }
 }
 
-
 input[class^="#{$prefix}"], .#{$prefix}-Dropdown, .#{$prefix}-ProgressBar, .#{$prefix}-Checkbox {
 
     color: get-colour(fg);

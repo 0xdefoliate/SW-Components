@@ -5,24 +5,22 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
-
-import { useId, useState } from "react"
-import type { BaseProps } from "../../index.js"
+import { type JSX, useId, useRef, useState } from "react"
+import { getClassName } from "../../internal/helpers/getClassName"
 
 import "./Checkbox.scss"
 
-export interface CheckboxProps extends BaseProps<HTMLDivElement> {
+export interface CheckboxProps {
     label: string
     checked?: boolean
     change?: (newValue: boolean) => void
     disabled?: boolean
 }
 
-export function Checkbox({ label, checked, change, disabled, ref }: CheckboxProps) {
+export function Checkbox({ label, checked, change, disabled }: CheckboxProps): JSX.Element {
     const [ value, setValue ] = useState<boolean>(!!checked)
 
-    const onChange = () => {
+    const handleChange = (): void => {
         if (disabled) {
             return
         }
@@ -35,27 +33,34 @@ export function Checkbox({ label, checked, change, disabled, ref }: CheckboxProp
         }
     }
 
-    let className = "X-Checkbox"
+    const className = getClassName({
+        base: "Checkbox",
+        appendConditionally: {
+            disabled
+        }
+    })
 
-    if (disabled) {
-        className += " disabled"
-    }
+    const checkBoxID = useId()
+    const labelID = useId()
 
-    const checkBoxId = useId()
-    const labelId = useId()
+    const checkboxRef = useRef<HTMLDivElement>(null)
 
     return (
         <div className="X-Checkbox-Wrapper">
             <div className={className}
-                 id={checkBoxId}
-                 aria-labelledby={labelId}
+                 id={checkBoxID}
+                 aria-labelledby={labelID}
                  aria-checked={value}
                 // The checkbox should not be tabbable if it's disabled
                  tabIndex={disabled ? undefined : 0}
                  role="checkbox"
-                 onClick={onChange}
-                 onKeyDown={e => e.key === "Enter" && onChange()}
-                 ref={ref}
+                 onClick={handleChange}
+                 onKeyDown={e => {
+                     if (e.key === "Enter") {
+                         handleChange()
+                     }
+                 }}
+                 ref={checkboxRef}
                  aria-disabled={disabled}>
                 {value && (
                     <svg className="X-Checkbox-Checkmark"
@@ -70,10 +75,10 @@ export function Checkbox({ label, checked, change, disabled, ref }: CheckboxProp
                 )}
             </div>
 
-            <label htmlFor={checkBoxId}
-                   id={labelId}
+            <label htmlFor={checkBoxID}
+                   id={labelID}
                    onClick={() => {
-                       document.getElementById(checkBoxId)?.click()
+                       checkboxRef.current?.click()
                    }}>
                 {label}
             </label>

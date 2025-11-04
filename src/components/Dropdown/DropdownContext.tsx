@@ -7,9 +7,10 @@
 
 import { createContext, type RefObject } from "react"
 
-export type TDropdownContext = {
+export interface DropdownContext {
     handleOptionSelected: (ref: RefObject<HTMLLIElement | null>, selectedByDefault?: boolean) => void
     isSelected: (id: string) => boolean
+    chosen: (value: string) => boolean
 }
 
-export const DropdownContext = createContext<TDropdownContext | null>(null)
+export const DropdownContext = createContext<DropdownContext | null>(null)

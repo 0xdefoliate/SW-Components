@@ -5,11 +5,11 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import type { ReactNode } from "react"
+import { type JSX, type ReactNode } from "react"
 
 import "./NavItem.scss"
 
-export function NavItem({ children }: { children: ReactNode }) {
+export function NavItem({ children }: { children: ReactNode }): JSX.Element {
     return (
         <li className="X-NavItem" role="menuitem">
             {children}

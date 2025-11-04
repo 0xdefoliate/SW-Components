@@ -5,12 +5,11 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
-
 import {
     Children,
     cloneElement,
     type HTMLAttributes,
+    type JSX,
     type ReactElement,
     type ReactNode,
     type RefObject,
@@ -26,12 +25,14 @@ import { useChildIDs } from "../../hooks/useChildIDs"
 import { useOnClickOutside } from "../../hooks/useOnClickOutside"
 
 export interface DropdownProps {
-    label: string,
-    children: ReactNode,
+    label: string
+    change?: (newValue: string) => void
+    children: ReactNode
+    chosen?: (value?: string) => boolean
     disabled?: boolean
 }
 
-export function Dropdown({ label, children, disabled }: DropdownProps) {
+export function Dropdown({ label, change, children, chosen, disabled }: DropdownProps): JSX.Element {
 
     const [ active, setActive ] = useState<boolean>(false)
     const [ selectedOption, setSelectedOption ] = useState<HTMLLIElement | null>(null)
@@ -56,7 +57,7 @@ export function Dropdown({ label, children, disabled }: DropdownProps) {
     const handleOptionSelected = (
         ref: RefObject<HTMLLIElement | null>,
         selectedByDefault?: boolean
-    ) => {
+    ): void => {
         setSelectedOption(ref.current)
 
         if (dropdownPreviewRef.current && ref.current) {
@@ -73,9 +74,27 @@ export function Dropdown({ label, children, disabled }: DropdownProps) {
 
         setActive(false)
         dropdownRef.current?.focus()
+
+        // Section for the user-defined `change` callback. We're putting it at the bottom because
+        // we don't want it to be called when an option is selected by default.
+
+        if (!change) {
+            return
+        }
+
+        const newValue = ref.current?.dataset.value
+
+        if (!newValue) {
+            throw Error(
+                "Couldn't call the `change` event handler for `Dropdown`.\n" +
+                "Did you forget to add a `value` attribute to one of your `Option`s?"
+            )
+        }
+
+        change(newValue)
     }
 
-    const handleKeyDown = (key: string, preventDefault: () => void) => {
+    const handleKeyDown = (key: string, preventDefault: () => void): void => {
         if (active) {
             switch (key) {
                 case "Escape":
@@ -83,8 +102,10 @@ export function Dropdown({ label, children, disabled }: DropdownProps) {
                     setActive(false)
                     dropdownRef.current?.focus()
                     return
-                case "Tab":
-                    return preventDefault()
+                case "Tab": {
+                    preventDefault()
+                    return
+                }
                 case "ArrowUp":
                 case "ArrowDown":
                     break
@@ -94,7 +115,7 @@ export function Dropdown({ label, children, disabled }: DropdownProps) {
         }
 
         // Activate the Dropdown (i.e. show the dropdown items) when either Arrow Up or Arrow Down
-        // is pressed and set the focus to the currently selected option
+        // Is pressed and set the focus to the currently selected option
         if ((key === "ArrowUp" || key === "ArrowDown") && !active) {
             setActive(true)
             setFocusedOption(selectedOption)
@@ -161,8 +182,11 @@ export function Dropdown({ label, children, disabled }: DropdownProps) {
 
     // Select the first option by default if the user hasn't explicitly provided a default
     // option. Also, this effect will set the preview text as well, otherwise it'd be empty!
+    //
+    // This effect will not be run when the `chosen` predicate prop is passed since they
+    // interfere with each other.
     useEffect(() => {
-        if (!selectedOption && dropdownOptionsRef.current) {
+        if (!selectedOption && !chosen && dropdownOptionsRef.current) {
 
             // Will change this in the future to check the type instead of just assuming...
             const defaultOption = dropdownOptionsRef.current.firstElementChild as HTMLLIElement
@@ -173,7 +197,7 @@ export function Dropdown({ label, children, disabled }: DropdownProps) {
                 dropdownPreviewRef.current.textContent = defaultOption.innerText || ""
             }
         }
-    }, [ selectedOption ])
+    }, [ selectedOption, chosen ])
 
     return (
         <div style={{
@@ -200,13 +224,19 @@ export function Dropdown({ label, children, disabled }: DropdownProps) {
                          return
                      }
 
-                     handleKeyDown(e.key, () => e.preventDefault())
+                     handleKeyDown(e.key, () => {
+                         e.preventDefault()
+                     })
                  }}>
 
                 <div ref={dropdownButtonRef}
                      role="button"
                      aria-label="Toggle Dropdown"
-                     onClick={() => !disabled && setActive(!active)}>
+                     onClick={() => {
+                         if (!disabled) {
+                             setActive(!active)
+                         }
+                     }}>
 
                     <span className="text" ref={dropdownPreviewRef}></span>
 
@@ -220,7 +250,8 @@ export function Dropdown({ label, children, disabled }: DropdownProps) {
                     ref={dropdownOptionsRef}>
                     <DropdownContext value={{
                         handleOptionSelected,
-                        isSelected: (id: string): boolean => selectedOption?.id === id
+                        isSelected: (id: string): boolean => selectedOption?.id === id,
+                        chosen: chosen ?? ((): false => false)
                     }}>
                         {Children.map(children, (child, index) =>
                             cloneElement(child as ReactElement<HTMLAttributes<HTMLElement>>, {

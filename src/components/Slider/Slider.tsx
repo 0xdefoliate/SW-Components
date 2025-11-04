@@ -5,25 +5,23 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
-
 import "./Slider.scss"
-import { useEffect, useRef, useState } from "react"
-import type { FormControlProps } from "../../index"
+import { type JSX, useEffect, useRef, useState } from "react"
+import type { FormControlProps } from "../types"
 
-export interface SliderProps extends FormControlProps<HTMLInputElement, number, number> {
+export interface SliderProps extends FormControlProps<number, number> {
     range: [ number, number ]
     step?: number
 }
 
-export function Slider({ label, range, change, value, step, ref, disabled }: SliderProps) {
+export function Slider({ label, range, change, value, step, disabled }: SliderProps): JSX.Element {
 
-    const sliderRef = useRef<HTMLInputElement>(null)
+    const ref = useRef<HTMLInputElement>(null)
 
     const [ internalValue, setInternalValue ] = useState<number>(range[0])
 
     useEffect(() => {
-        const slider = ref?.current || sliderRef.current
+        const slider = ref?.current
 
         slider?.style.setProperty("--cursor-type", "grab")
 
@@ -31,34 +29,21 @@ export function Slider({ label, range, change, value, step, ref, disabled }: Sli
             slider?.style.setProperty("--cursor-type", "not-allowed")
         }
 
-        return () => {
+        return (): void => {
             slider?.style.removeProperty("--cursor-type")
         }
     }, [ disabled, ref ])
 
-    const injectValuesIntoText = (values: { [key: string]: string | number | undefined }, text: string) => {
-        let newText = text
-
-        for (const [ key, value ] of Object.entries(values)) {
-            newText = newText.replaceAll(key, String(value))
-        }
-
-        return newText
-    }
-
     return (
         <label className="X-Slider-Wrapper">
             <div className="X-Slider-Label">
-                {injectValuesIntoText({
-                    $progress: value ?? internalValue,
-                    $min: range[0],
-                    $max: range[1]
-                }, label as string)}
+                {label}
             </div>
             <input className="X-Slider"
                 // TODO: DRY up these handlers
                    onMouseDown={() => {
-                       const slider = ref?.current || sliderRef.current
+                       const slider = ref?.current
+
                        if (!disabled) {
                            slider?.style.setProperty("--cursor-type", "grabbing")
                        } else {
@@ -67,7 +52,8 @@ export function Slider({ label, range, change, value, step, ref, disabled }: Sli
                    }}
 
                    onMouseUp={() => {
-                       const slider = ref?.current || sliderRef.current
+                       const slider = ref?.current
+
                        if (!disabled) {
                            slider?.style.setProperty("--cursor-type", "grab")
                        } else {
@@ -88,7 +74,7 @@ export function Slider({ label, range, change, value, step, ref, disabled }: Sli
                        }
                    }}
                    disabled={disabled}
-                   ref={ref || sliderRef}
+                   ref={ref}
                    role="slider"
             />
         </label>

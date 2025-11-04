@@ -5,24 +5,24 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
-
-import { useContext, useId, useRef } from "react"
+import { type JSX, useContext, useId, useRef } from "react"
 
 import "./Radio.scss"
-import type { FormControlProps } from "../../../index"
 import { RadioContext } from "../RadioContext"
 
-export interface RadioProps extends FormControlProps<HTMLInputElement, string, boolean> {
+export interface RadioProps {
+    label: string
+    value?: string
+    disabled?: boolean
     defaultChecked?: boolean
 }
 
-export function Radio({ label, value, disabled, ref, defaultChecked }: RadioProps) {
+export function Radio({ label, value, disabled, defaultChecked }: RadioProps): JSX.Element {
 
     const { name, change } = useContext(RadioContext)
 
     // This ref is used if the consumer hasn't provided their own
-    const internalRef = useRef<HTMLInputElement>(null)
+    const ref = useRef<HTMLInputElement>(null)
 
     const radioId = useId()
     const labelId = useId()
@@ -37,10 +37,10 @@ export function Radio({ label, value, disabled, ref, defaultChecked }: RadioProp
                    aria-labelledby={labelId}
                    aria-disabled={disabled}
                    disabled={disabled}
-                   ref={ref ?? internalRef}
+                   ref={ref}
                    defaultChecked={defaultChecked}
-                   onChange={change && (() => {
-                       const radio = ref?.current ?? internalRef?.current
+                   onChange={change && ((): void => {
+                       const radio = ref?.current
 
                        if (!radio) {
                            throw new Error("React ref pointing to this element is undefined.")

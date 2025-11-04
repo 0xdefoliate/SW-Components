@@ -7,9 +7,9 @@
 
 import { Children, type ReactNode, useEffect, useState } from "react"
 
-export const useChildIDs = (children: ReactNode) => {
+export function useChildIDs(children: ReactNode): Array<string> {
 
-    const [ childIDs, setChildIDs ] = useState<string[]>([])
+    const [ childIDs, setChildIDs ] = useState<Array<string>>([])
 
     const generateID = (): string => {
         return `${Date.now()}${Math.random()}`
@@ -17,7 +17,7 @@ export const useChildIDs = (children: ReactNode) => {
     }
 
     useEffect(() => {
-        const ids: string[] = []
+        const ids: Array<string> = []
 
         Children.forEach(children, () => {
             ids.push(generateID())

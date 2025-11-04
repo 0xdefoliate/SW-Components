@@ -12,8 +12,8 @@
     align-items: center;
 
     box-sizing: content-box;
-    width: 100%;
 
+    width: 100%;
     height: 2.4rem;
 
     padding: 0 2px;
@@ -21,6 +21,7 @@
     @include user-select(none);
 
     & > div {
+        overflow: hidden;
         position: relative;
         display: flex;
 
@@ -31,9 +32,22 @@
 
         gap: 8px;
 
+        box-sizing: border-box;
+
+        & > .text {
+            overflow: hidden;
+            max-width: calc(100% - 16px);
+        }
+
         & > .chevron-icon {
             font-size: 1.5rem;
             position: absolute;
+
+            display: flex;
+
+            width: 16px;
+
+            align-items: center;
 
             top: 4px;
             right: 0;
@@ -47,6 +61,8 @@
     top: 39.5px;
     left: -1px;
     box-sizing: content-box;
+
+    overflow: hidden;
 
     width: 100%;
 
@@ -68,7 +84,6 @@
         --#{$local-var-prefix}-gradient-start-colour: hsla(0, 0%, 15%, 0.8);
         --#{$local-var-prefix}-gradient-end-colour: hsla(0, 0%, 25%, 0.7);
     }
-
 
     @include gradient(vertical, var(--#{$local-var-prefix}-gradient-start-colour), var(--#{$local-var-prefix}-gradient-end-colour));
     @include shadow(0, 0, 8px, 0.3);
