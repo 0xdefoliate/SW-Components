@@ -42,5 +42,5 @@
         "skipLibCheck": false
     },
     "include": "src/**/*",
-    "exclude": ["src/internal/**/*"]
+    "exclude": [ "src/internal/**/*" ]
 }
