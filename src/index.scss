@@ -219,7 +219,9 @@ input[class^="#{$prefix}"], .#{$prefix}-Dropdown, .#{$prefix}-ProgressBar, .#{$p
 }
 
 @media (hover: hover) {
-    input[class^="#{$prefix}"]:not(:disabled):hover, .#{$prefix}-Dropdown:not(.disabled):hover {
+    input[class^="#{$prefix}"]:not(:disabled):hover,
+    .#{$prefix}-Dropdown:not(.disabled):hover,
+    .#{$prefix}-Checkbox:not(.disabled):hover {
         $shadow-x: 0;
         $shadow-y: 0;
         $shadow-blur: 6px;

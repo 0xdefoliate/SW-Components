@@ -41,6 +41,7 @@ export default defineConfig({
             }
         }
     },
+
     server: {
         // Required for the dev server to be accessible outside the Docker container.
         host: "0.0.0.0",

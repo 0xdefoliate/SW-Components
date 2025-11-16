@@ -31,13 +31,7 @@
         }
     }
 
-
     @include if-hover {
-
-        @include gradient(vertical, get-colour(grey-100), hsl(0, 0%, 70%));
-
-        @include if-prefers-dark {
-            @include gradient(vertical, get-colour(grey-400), get-colour(grey-200));
-        }
+        filter: contrast(100%);
     }
 }
