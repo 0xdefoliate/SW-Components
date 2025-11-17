@@ -13,4 +13,4 @@ RUN chown -R developer:developer_group /src
 # Switch to the lesser privileged user
 USER developer
 
-RUN npm install
+RUN cd /src && npm install
