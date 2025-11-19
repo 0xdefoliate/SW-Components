@@ -6,7 +6,7 @@
  */
 
 import { type JSX, useId, useRef, useState } from "react"
-import { getClassName } from "../../internal/helpers/getClassName"
+import { useClassName } from "../../internal/hooks/useClassName"
 
 import "./Checkbox.scss"
 
@@ -33,12 +33,17 @@ export function Checkbox({ label, checked, change, disabled }: CheckboxProps): J
         }
     }
 
-    const className = getClassName({
-        base: "Checkbox",
-        appendConditionally: {
-            disabled
-        }
-    })
+    const classNames = {
+        checkbox: useClassName({
+            base: "Checkbox",
+            appendConditionally: {
+                disabled
+            }
+        }),
+
+        wrapper: useClassName("Checkbox-Wrapper"),
+        checkmark: useClassName("Checkbox-Checkmark")
+    }
 
     const checkBoxID = useId()
     const labelID = useId()
@@ -46,8 +51,8 @@ export function Checkbox({ label, checked, change, disabled }: CheckboxProps): J
     const checkboxRef = useRef<HTMLDivElement>(null)
 
     return (
-        <div className="X-Checkbox-Wrapper">
-            <div className={className}
+        <div className={classNames.wrapper}>
+            <div className={classNames.checkbox}
                  id={checkBoxID}
                  aria-labelledby={labelID}
                  aria-checked={value}
@@ -63,7 +68,7 @@ export function Checkbox({ label, checked, change, disabled }: CheckboxProps): J
                  ref={checkboxRef}
                  aria-disabled={disabled}>
                 {value && (
-                    <svg className="X-Checkbox-Checkmark"
+                    <svg className={classNames.checkmark}
                          aria-hidden="true"
                          xmlns="http://www.w3.org/2000/svg"
                          width="16"

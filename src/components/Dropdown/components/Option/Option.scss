@@ -7,37 +7,39 @@
 
 @use "../../../../index.scss" as *;
 
-.#{$prefix}-Dropdown-Option {
+@include component(Dropdown-Option) {
+    padding: 4px;
+
     display: flex;
     align-items: center;
 
-    padding: 4px;
-
     gap: 4px;
 
-    @include if-hover {
+    @include if(hovered) {
         @include shadow(0, 0, 6px, 0.3, true)
     }
 
-    &:not(:last-child) {
-        border-bottom: 1px solid get-colour(grey-300);
-    }
-
-    &:active {
+    @include if(clicked) {
         @include shadow(0, 0, 12px, 0.3, true)
     }
 
-    &:focus-visible {
+    @include if(focused) {
         border-radius: 0;
         outline-offset: -1px;
+
         @include shadow(0, 0, 8px, 0.3, true)
     }
 
-    & > .#{$prefix}-Dropdown-Option-Check-Indicator {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 20px;
-        height: 20px;
+    &:not(:last-child) {
+        border-bottom: 1px solid get-var(grey-300);
     }
+}
+
+@include component(Dropdown-Option-Check-Indicator) {
+    width: 20px;
+    height: 20px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }

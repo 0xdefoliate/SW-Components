@@ -13,6 +13,7 @@ export const AppearanceContext = createContext<{
     mode: AppearanceMode
     setTheme: (theme: AppearanceTheme) => void
     setMode: (mode: AppearanceMode) => void
+    _actualMode?: "light" | "dark"
 }>({
     theme: "aquatic",
     mode: "auto",

@@ -20,6 +20,7 @@ import {
 } from "react"
 
 import "./Dropdown.scss"
+import { useClassName } from "../../../../internal/hooks/useClassName"
 import { DropdownContext } from "../../DropdownContext"
 import { useChildIDs } from "../../hooks/useChildIDs"
 import { useOnClickOutside } from "../../hooks/useOnClickOutside"
@@ -199,6 +200,12 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
         }
     }, [ selectedOption, chosen ])
 
+    const classNames = {
+        dropdown: useClassName("Dropdown"),
+        button: useClassName("Dropdown-Button"),
+        options: useClassName("Dropdown-Options")
+    }
+
     return (
         <div style={{
             display: "flex",
@@ -209,7 +216,7 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
                 {label}
             </label>
 
-            <div className="X-Dropdown"
+            <div className={classNames.dropdown}
                  id={dropdownID}
                  role="listbox"
                  aria-roledescription="Dropdown"
@@ -230,8 +237,10 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
                  }}>
 
                 <div ref={dropdownButtonRef}
+                     className={classNames.button}
                      role="button"
                      aria-label="Toggle Dropdown"
+                     aria-disabled={disabled}
                      onClick={() => {
                          if (!disabled) {
                              setActive(!active)
@@ -245,7 +254,7 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
                     </span>
                 </div>
 
-                <ul className="X-Dropdown-Options"
+                <ul className={classNames.options}
                     {...(!active && { style: { display: "none" } })}
                     ref={dropdownOptionsRef}>
                     <DropdownContext value={{

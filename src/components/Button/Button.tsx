@@ -6,7 +6,7 @@
  */
 
 import { type JSX, type ReactNode, useRef } from "react"
-import { getClassName } from "../../internal/helpers/getClassName"
+import { useClassName } from "../../internal/hooks/useClassName"
 
 import "./Button.scss"
 
@@ -22,7 +22,7 @@ export function Button({ children, primary, click, disabled, fluid }: ButtonProp
 
     const buttonRef = useRef<HTMLButtonElement>(null)
 
-    const className = getClassName({
+    const className = useClassName({
         base: "Button",
         appendConditionally: {
             primary,

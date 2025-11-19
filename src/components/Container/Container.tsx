@@ -8,7 +8,7 @@
 import { type CSSProperties, type JSX, type ReactNode } from "react"
 
 import "./Container.scss"
-import { getClassName } from "../../internal/helpers/getClassName"
+import { useClassName } from "../../internal/hooks/useClassName"
 
 export interface ContainerProps {
     children: ReactNode
@@ -46,7 +46,7 @@ export function Container({
     flex
 }: ContainerProps): JSX.Element {
 
-    const className = getClassName({
+    const className = useClassName({
         base: "Container",
         appendConditionally: {
             vertical,

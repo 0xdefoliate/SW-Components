@@ -8,6 +8,7 @@
 import { type JSX, type ReactNode } from "react"
 
 import "./Navbar.scss"
+import { useClassName } from "../../../../internal/hooks/useClassName"
 
 export interface NavbarProps {
     brand: string,
@@ -31,8 +32,10 @@ export function Navbar({ brand, children }: NavbarProps): JSX.Element {
         brandURL = brand.substring(separatorIndex + 1)
     }
 
+    const className = useClassName("Navbar")
+
     return (
-        <nav className="X-Navbar" role="navigation">
+        <nav className={className} role="navigation">
             <div className="navbar-brand-and-items">
                 <div className="navbar-brand">
                     <a href={brandContainsURL ? brandURL : "#"} className="navbar-brand-link">

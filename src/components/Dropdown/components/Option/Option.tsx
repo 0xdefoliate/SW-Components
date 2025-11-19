@@ -6,6 +6,7 @@
  */
 
 import { type JSX, useContext, useEffect, useRef, useState } from "react"
+import { useClassName } from "../../../../internal/hooks/useClassName"
 import { DropdownContext } from "../../DropdownContext"
 
 import "./Option.scss"
@@ -52,8 +53,13 @@ export function Option({ text, value, id }: {
     // (I should probably change the name of the `isSelected` function, but oh well)
     const _selected = isSelected(id ?? "")
 
+    const classNames = {
+        option: useClassName("Dropdown-Option"),
+        checkIndicator: useClassName("Dropdown-Option-Check-Indicator"),
+    }
+
     return (
-        <li className="X-Dropdown-Option"
+        <li className={classNames.option}
             id={id}
             ref={ref}
             onClick={() => {
@@ -68,7 +74,7 @@ export function Option({ text, value, id }: {
             aria-selected={_selected}
             data-value={value}
             tabIndex={-1}>
-            <span className="X-Dropdown-Option-Check-Indicator" aria-hidden="true">
+            <span className={classNames.checkIndicator} aria-hidden="true">
                 {_selected && (
                     <svg xmlns="http://www.w3.org/2000/svg"
                          width="16"

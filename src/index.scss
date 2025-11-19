@@ -6,6 +6,89 @@
  */
 
 @use "sass:map";
+@use "sass:list";
+@use "sass:string";
+@use "sass:meta";
+
+$prefix: X;
+$mobile-width: 650px;
+$filter-argument-on-disabled: contrast(0.6);
+$themes: (aquatic, flat, native);
+
+@mixin if($condition, $selector: "&", $also: false, $top-level: false) {
+
+    @if $selector == "&" and $top-level == true {
+        $selector: ""
+    }
+
+    @if $condition == dark or $condition == light {
+        #{$selector}.mode-#{$condition} {
+            @content;
+        }
+    } @else if $condition == hovered {
+        @media (hover: hover) {
+            #{$selector}:hover {
+                @content;
+            }
+        }
+    } @else if $condition == disabled {
+        #{$selector}:disabled,
+        #{$selector}.disabled,
+        #{$selector}[aria-disabled="true"] {
+            @content;
+        }
+
+        @if $also {
+            #{$selector}:disabled #{$also},
+            #{$selector}.disabled #{$also},
+            #{$selector}[aria-disabled="true"] #{$also} {
+                @content
+            }
+        }
+
+    } @else if $condition == focused {
+        #{$selector}:focus-visible {
+            @content;
+        }
+    }
+        // Basically, any condition which starts with "theme is ...", do X.
+    @else if string.index(#{$condition}, "theme is") == 1 {
+
+        $theme: list.nth($condition, list.length($condition));
+
+        // Check if user passed an invalid theme
+        @if list.index($themes, $theme) == null {
+            @error "Bad theme: #{$theme}."
+        }
+
+        #{$selector}.theme-#{$theme} {
+            @content
+        }
+    } @else if $condition == clicked {
+        $not-disabled-selector: ":not(:disabled):not(.disabled)";
+
+        #{$selector}#{$not-disabled-selector}:active,
+        #{$selector}#{$not-disabled-selector}.__KEYBOARD_CLICK__ {
+            @content;
+        }
+    } @else if $condition == checked {
+        #{$selector}:checked {
+            @content;
+        }
+
+        @if $also {
+            #{$selector}:checked #{$also} {
+                @content;
+            }
+        }
+    } @else if $condition == mobile {
+        @media (max-width: $mobile-width) {
+            @content;
+        }
+    } @else {
+        @error "Bad condition to check: #{$condition}."
+    }
+}
 
 @mixin user-select($value) {
     -moz-user-select: $value;
@@ -28,36 +111,23 @@
     background: linear-gradient($degrees, $start-color, $end-color);
 }
 
-@mixin shadow($x: 2px, $y: 2px, $blur: 4px, $alpha: 0.4, $inset: false) {
+@mixin shadow($x: 2px, $y: 2px, $blur: 4px, $alpha: 0.4, $inset: false, $reset: false) {
+    @if not $reset {
+        $arg: $x $y $blur rgba(0, 0, 0, $alpha);
 
-    $arg: $x $y $blur rgba(0, 0, 0, $alpha);
-
-    @if $inset {
-        box-shadow: $arg inset
-    } @else {
-        box-shadow: $arg;
-    }
-}
-
-@mixin if-prefers-dark {
-    @media (prefers-color-scheme: dark) {
-        @content
-    }
-}
-
-@mixin if-hover {
-    @media (hover: hover) {
-        &:hover {
-            @content;
+        @if $inset {
+            box-shadow: $arg inset
+        } @else {
+            box-shadow: $arg;
         }
+    } @else {
+        box-shadow: none;
     }
 }
 
-@mixin if-disabled {
-    &:disabled,
-    &.disabled {
-        @content;
-    }
+@mixin backdrop-filter($value) {
+    -webkit-backdrop-filter: blur($value);
+    backdrop-filter: blur($value);
 }
 
 @mixin appearance($value) {
@@ -65,21 +135,38 @@
     appearance: $value;
 }
 
-@mixin on-disabled {
+@function get-var($key, $local: false) {
+    @return var(--#{$prefix}-#{$key});
 }
 
-$prefix: X;
-$mobile-width: 650px;
-$filter-argument-on-disabled: contrast(0.6);
+@mixin set($definition) {
 
-@function get-colour($colour-name) {
-    @return var(--#{$prefix}-#{$colour-name});
+    $delimiter: "to";
+
+    $key: list.nth($definition, 1);
+    $value: list.nth($definition, 3);
+
+    @if list.nth($definition, 2) != $delimiter {
+        @error "Expected '#{$delimiter}' as delimiter."
+    }
+
+    --#{$prefix}-#{$key}: #{$value};
+}
+
+@mixin component($name, $input: false) {
+    .#{$prefix}-#{$name} {
+        @content;
+
+        @if $input {
+            @extend .#{$prefix}-GENERIC-INPUT-BASE-STYLE;
+        }
+    }
 }
 
 :root {
     @mixin reflect-grey-colours($map, $theme) {
         @each $key, $lightness in map.get($map, $theme) {
-            --#{$prefix}-#{$key}: hsl(0, 0%, #{$lightness});
+            @include set(#{$key} to hsl(0, 0%, $lightness));
         }
     }
 
@@ -87,22 +174,34 @@ $filter-argument-on-disabled: contrast(0.6);
      * Fonts
      */
 
-    /* NOTE: A fallback font is never assigned here they are defined in the components' respective CSS. */
-    --#{$prefix}-default-font-family: "Lucida Grande", "Helvetica Neue", system-ui;
-    --#{$prefix}-default-font-size: 1rem;
+    // NOTE: A fallback font is never assigned here, they are defined in the components' respective CSS.
+
+    @include if(theme is aquatic) {
+        @include set(default-font-family to "\"Lucida Grande\", \"Helvetica Neue\", system-ui");
+    }
+
+    @include if(theme is flat) {
+        @include set(default-font-family to sans-serif);
+    }
+
+    @include if(theme is native) {
+        @include set(default-font-family to system-ui);
+    }
+
+    @include set(default-font-size to 1rem);
 
     /*
      * Colours
      */
 
-    --#{$prefix}-fg: black;
-    --#{$prefix}-bg: white;
+    @include set(fg to black);
+    @include set(bg to white);
 
-    --#{$prefix}-bg-dark-dim: rgb(30, 30, 30);
+    @include set(bg-dark-dim to rgb(30, 30, 30));
 
-    --#{$prefix}-primary: rgb(0, 100, 255);
-    --#{$prefix}-primary-brighter: rgb(0, 150, 255);
-    --#{$prefix}-primary-darker: rgb(0, 50, 255);
+    @include set(primary to rgb(0, 100, 255));
+    @include set(primary-brighter to rgb(0, 150, 255));
+    @include set(primary-darker to rgb(0, 50, 255));
 
     $greys: (
         light: (
@@ -132,9 +231,9 @@ $filter-argument-on-disabled: contrast(0.6);
     @include reflect-grey-colours($greys, light);
 
     /* Invert the `grey-*` variables in dark-mode. */
-    @include if-prefers-dark {
-        --X-fg: white;
-        --X-bg: black;
+    @include if(dark) {
+        @include set(fg to white);
+        @include set(bg to black);
 
         @include reflect-grey-colours($greys, dark);
     }
@@ -144,37 +243,37 @@ $filter-argument-on-disabled: contrast(0.6);
      * Accessibility
      */
 
-    --#{$prefix}-transition-duration: 0.2s;
+    @include set(transition-duration to 0.2s);
 
     @media (prefers-reduced-motion: reduce) {
-        --#{$prefix}-transition-duration: 0ms;
+        @include set(transition-duration to 0ms);
     }
 
     /*
      * Other
      */
 
-    --#{$prefix}-default-border-radius: 6px;
+    @include set(default-border-radius to 6px);
 
     /*
      * Navbar
      */
 
-    --#{$prefix}-navbar-height: 10vh;
-    --#{$prefix}-navbar-brand-font-family: system-ui;
+    @include set(navbar-height to 10vh);
+    @include set(navbar-brand-font-family to system-ui);
 
-    --#{$prefix}-navbar-gradient-start-color: var(--#{$prefix}-grey-100);
-    --#{$prefix}-navbar-gradient-end-color: var(--#{$prefix}-grey-200);
+    @include set(navbar-gradient-start-color to get-var(grey-100));
+    @include set(navbar-gradient-end-color to get-var(grey-200));
 
-    @include if-prefers-dark {
-        --#{$prefix}-navbar-gradient-start-color: hsl(0, 0%, 30%);
-        --#{$prefix}-navbar-gradient-end-color: hsl(0, 0%, 20%)
+    @include if(dark) {
+        @include set(navbar-gradient-start-color to hsl(0, 0%, 30%));
+        @include set(navbar-gradient-end-color to hsl(0, 0%, 20%))
     }
 }
 
 * {
     box-sizing: border-box;
-    transition-duration: var(--#{$prefix}-transition-duration) !important;
+    transition-duration: get-var(transition-duration) !important;
 
     transition-property: box-shadow, border-color;
 
@@ -182,54 +281,70 @@ $filter-argument-on-disabled: contrast(0.6);
 }
 
 body {
-    font-family: var(--#{$prefix}-default-font-family), sans-serif;
+    font-family: get-var(default-font-family), sans-serif;
 
     width: 100dvw;
     height: 100dvh;
 
     margin: 0;
-
     padding: 0;
-    color: get-colour(fg);
 
-    background-color: get-colour(bg);
-    @include if-prefers-dark {
-        background-color: get-colour(bg-dark-dim);
+    color: get-var(fg);
+    background-color: get-var(bg);
+
+    @include if(dark) {
+        background-color: get-var(bg-dark-dim);
     }
 }
 
-input[class^="#{$prefix}"], .#{$prefix}-Dropdown, .#{$prefix}-ProgressBar, .#{$prefix}-Checkbox {
+// This class is a set of multiple properties and similar
+// which, together, form a base of a mutual style for inputs.
+.#{$prefix}-GENERIC-INPUT-BASE-STYLE {
 
-    color: get-colour(fg);
-    border: 1px solid get-colour(grey-400);
+    color: get-var(fg);
 
-    @include gradient(vertical, get-colour(grey-200), get-colour(grey-100));
+    border: 1px solid get-var(grey-400);
+
     @include appearance(none);
 
-    @include if-prefers-dark {
-        border-color: get-colour(grey-500);
-        @include gradient(vertical, get-colour(grey-100), get-colour(grey-200));
-    }
-
-    &:disabled,
-    &[aria-disabled="true"] {
+    @include if(disabled) {
         cursor: not-allowed;
         filter: $filter-argument-on-disabled;
     }
-}
 
-@media (hover: hover) {
-    input[class^="#{$prefix}"]:not(:disabled):hover,
-    .#{$prefix}-Dropdown:not(.disabled):hover,
-    .#{$prefix}-Checkbox:not(.disabled):hover {
-        $shadow-x: 0;
-        $shadow-y: 0;
-        $shadow-blur: 6px;
+    @include if(theme is aquatic) {
+        @include gradient(vertical, get-var(grey-200), get-var(grey-100));
 
-        @include shadow($shadow-x, $shadow-y, $shadow-blur, 0.2, true);
+        @include if(dark) {
+            border-color: get-var(grey-500);
+            @include gradient(vertical, get-var(grey-100), get-var(grey-200));
+        }
 
-        @include if-prefers-dark {
-            @include shadow($shadow-x, $shadow-y, $shadow-blur, get-colour(grey-600), true);
+        @include if(hovered) {
+            $shadow-x: 0;
+            $shadow-y: 0;
+            $shadow-blur: 6px;
+
+            @include shadow($shadow-x, $shadow-y, $shadow-blur, 0.2, true);
+
+            @include if(dark) {
+                @include shadow($shadow-x, $shadow-y, $shadow-blur, get-var(grey-600), true);
+            }
+        }
+    }
+
+    @include if(theme is flat) {
+        background-color: get-var(grey-100);
+
+        transition-property: filter;
+
+        @include if(hovered) {
+            filter: contrast(0.95);
+
+            @include if(disabled) {
+                filter: $filter-argument-on-disabled;
+            }
+
         }
     }
 }
@@ -239,26 +354,31 @@ input[class^="#{$prefix}"]:focus-visible, .#{$prefix}-Dropdown:focus-visible {
 }
 
 label {
-    @include user-select(none);
+    width: max-content;
 
     display: block;
-    width: max-content;
+
+    @include user-select(none);
 }
 
 a:not([class]) {
-    @include gradient(horizontal, get-colour(primary-brighter), get-colour(primary));
     width: max-content;
-    text-decoration: none;
+
     color: transparent;
+
     background-clip: text;
+
+    text-decoration: none;
     text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25);
 
-    &:hover {
+    @include gradient(horizontal, get-var(primary-brighter), get-var(primary));
+
+    @include if(hovered) {
         text-decoration: underline;
     }
 }
 
-:focus-visible {
-    border-color: get-colour(primary);
-    outline: 1px solid get-colour(primary-brighter);
+@include if(focused, $top-level: true) {
+    border-color: get-var(primary);
+    outline: 1px solid get-var(primary-brighter);
 }

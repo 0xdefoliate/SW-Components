@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import { type JSX, type ReactNode, useContext, useEffect, useState } from "react"
+import { type JSX, type ReactNode, useContext, useEffect, useRef, useState } from "react"
 import { AppearanceContext } from "./AppearanceContext"
 import type { AppearanceMode, AppearanceTheme } from "./types"
 
@@ -19,21 +19,62 @@ export interface AppearanceProps {
 
 export function Appearance({ children, options }: AppearanceProps): JSX.Element {
 
+    const isDarkMediaQueryRef = useRef(matchMedia("(prefers-color-scheme: dark)"))
+
     const context = useContext(AppearanceContext)
 
+    const initialMode = options?.mode ?? context.mode
+
     const [ theme, setTheme ] = useState<AppearanceTheme>(options?.theme ?? context.theme)
-    const [ mode, setMode ] = useState<AppearanceMode>(options?.mode ?? context.mode)
+
+    const [ mode, setMode ] = useState<AppearanceMode>(initialMode)
+    const [ internalMode, setInternalMode ] = useState<"light" | "dark">(
+        (initialMode === "auto" && isDarkMediaQueryRef.current)
+            ? (isDarkMediaQueryRef.current.matches && "dark") || "light"
+            : "light"
+    )
 
     useEffect(() => {
-        document.documentElement.dataset.theme = theme
-    }, [ theme ])
+        const className = `theme-${theme} mode-${internalMode}`
+
+        document.documentElement.className = className
+        document.body.className = className
+    }, [ theme, internalMode ])
 
     useEffect(() => {
-        document.documentElement.dataset.mode = mode
+
+        if (!isDarkMediaQueryRef.current) {
+            return
+        }
+
+        if (mode !== "auto") {
+            setInternalMode(mode)
+            return
+        }
+
+        const isDarkMediaQuery = isDarkMediaQueryRef.current
+
+        // Immediately synchronise the actual mode without waiting for the system to change.
+        setInternalMode(isDarkMediaQuery.matches ? "dark" : "light")
+
+        const handleIsDark = (e: MediaQueryListEvent): void => {
+            if (e.matches) {
+                setInternalMode("dark")
+                return
+            }
+
+            setInternalMode("light")
+        }
+
+        isDarkMediaQuery.addEventListener("change", handleIsDark)
+
+        return (): void => {
+            isDarkMediaQuery.removeEventListener("change", handleIsDark)
+        }
     }, [ mode ])
 
     return (
-        <AppearanceContext value={{ theme, mode, setTheme, setMode }}>
+        <AppearanceContext value={{ theme, mode, setTheme, setMode, _actualMode: internalMode }}>
             {children}
         </AppearanceContext>
     )

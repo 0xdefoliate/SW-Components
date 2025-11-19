@@ -1,0 +1,50 @@
+/*
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+import { useContext } from "react"
+import { AppearanceContext } from "../../components/Appearance/AppearanceContext"
+import { _componentPrefix } from "../../index"
+import type { UseClassNameBasicOverload, UseClassNameComplexOverload } from ".."
+
+export function useClassName(options: UseClassNameComplexOverload): string
+export function useClassName(className: UseClassNameBasicOverload): string
+export function useClassName(arg: UseClassNameComplexOverload | UseClassNameBasicOverload): string {
+
+    const { theme, mode, _actualMode } = useContext(AppearanceContext)
+
+    let base: string | undefined
+    let conditions: Record<string, string | number | boolean | null | undefined> | undefined
+
+    if (typeof arg === "string") {
+        base = arg
+    } else {
+        base = arg.base
+        conditions = arg.appendConditionally
+    }
+
+    let className = `${_componentPrefix}-${base}`
+
+    if (conditions) {
+        for (const [ key, value ] of Object.entries(conditions)) {
+            if (!value) {
+                continue
+            }
+
+            className += ` ${key}`
+        }
+    }
+
+    let _mode = _actualMode ?? mode
+
+    // This case will never happen (I say that half-confidently...).
+    if (_mode === "auto") {
+        console.error("_mode is 'auto'; this should NEVER happen. If it does, something's wrong!")
+        _mode = "light"
+    }
+
+    return `${className} theme-${theme} mode-${_mode}`
+}

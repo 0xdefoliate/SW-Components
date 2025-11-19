@@ -7,14 +7,17 @@
 
 @use "../../index.scss" as *;
 
-.#{$prefix}-Group {
+@include component(Group) {
+
+    $border-color-light: rgb(239, 239, 239);
 
     width: 100%;
     height: auto;
 
-    border-radius: var(--#{$prefix}-default-border-radius);
+    border-radius: get-var(default-border-radius);
+    border-color: $border-color-light;
 
-    @include if-prefers-dark {
+    @include if(dark) {
         border-color: hsla(0, 0%, 65%);
     }
 
@@ -22,7 +25,8 @@
         @include user-select(none);
     }
 
-    > .#{$prefix}-Group-Container {
+    // TODO: Extract this class and make it independent
+    & > .#{$prefix}-Group-Container {
         display: flex;
         flex-direction: column;
         width: 100%;

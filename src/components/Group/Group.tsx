@@ -8,6 +8,7 @@
 import type { JSX, ReactNode } from "react"
 
 import "./Group.scss"
+import { useClassName } from "../../internal/hooks/useClassName"
 
 export interface GroupProps {
     legend: string
@@ -15,13 +16,19 @@ export interface GroupProps {
 }
 
 export function Group({ legend, children }: GroupProps): JSX.Element {
+
+    const classNames = {
+        group: useClassName("Group"),
+        wrapper: useClassName("Group-Container"),
+    }
+
     return (
-        <fieldset className="X-Group">
+        <fieldset className={classNames.group}>
             <legend>
                 {legend}
             </legend>
 
-            <div className="X-Group-Container">
+            <div className={classNames.wrapper}>
                 {children}
             </div>
         </fieldset>

@@ -6,7 +6,8 @@
  */
 
 import { type JSX, type ReactNode } from "react"
-import { RadioContext } from "../RadioContext"
+import { useClassName } from "../../../../internal/hooks/useClassName"
+import { RadioContext } from "../../RadioContext"
 
 import "./RadioGroup.scss"
 
@@ -19,8 +20,11 @@ export interface RadioGroupProps {
 }
 
 export function RadioGroup({ name, change, children }: RadioGroupProps): JSX.Element {
+
+    const className = useClassName("RadioGroup")
+
     return (
-        <div className="X-RadioGroup" role="radiogroup">
+        <div className={className} role="radiogroup">
             <RadioContext value={{ name, change }}>
                 {children}
             </RadioContext>

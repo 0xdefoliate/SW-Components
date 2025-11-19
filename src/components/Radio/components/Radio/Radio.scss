@@ -5,20 +5,22 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@use "../../../index" as *;
+@use "../../../../index" as *;
 
-.#{$prefix}-Radio-Wrapper {
+@include component(Radio-Wrapper) {
+    width: max-content;
+
     display: inline flex;
     align-items: center;
-    width: max-content;
+
     gap: 4px;
 }
 
-.#{$prefix}-Radio {
-    position: relative;
-
+@include component(Radio, $input: true) {
     width: 1.2rem;
     height: 1.2rem;
+
+    position: relative;
 
     margin: 0;
 
@@ -26,17 +28,16 @@
 
     border-radius: 100%;
 
-    &:checked {
-        border: 6px solid get-colour(primary-brighter);
+    @include if(checked) {
+        border: 6px solid get-var(primary-brighter);
     }
 
-    &:disabled,
-    &:disabled + label {
+    @include if(disabled, $also: "+ label") {
         cursor: not-allowed;
         filter: $filter-argument-on-disabled;
-    }
 
-    &:disabled:hover {
-        box-shadow: none;
+        @include if(hovered) {
+            box-shadow: none;
+        }
     }
 }

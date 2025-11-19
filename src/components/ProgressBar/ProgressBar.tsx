@@ -7,6 +7,7 @@
 
 import "./ProgressBar.scss"
 import { type JSX, useEffect, useRef } from "react"
+import { useClassName } from "../../internal/hooks/useClassName"
 
 export function ProgressBar({ progress }: { progress: number }): JSX.Element {
 
@@ -15,6 +16,7 @@ export function ProgressBar({ progress }: { progress: number }): JSX.Element {
     // Prevent overflow of the progress bar.
     const _progress = progress > 100 ? 100 : progress
 
+    // TODO: Remove this redundant effect
     useEffect(() => {
         if (!progressTrackRef.current) {
             return
@@ -54,8 +56,10 @@ export function ProgressBar({ progress }: { progress: number }): JSX.Element {
         }
     }, [ _progress ])
 
+    const className = useClassName("ProgressBar")
+
     return (
-        <div className="X-ProgressBar" title={`Progress: ${_progress}%`}>
+        <div className={className} title={`Progress: ${_progress}%`}>
             <span className="progress" ref={progressTrackRef} style={{ width: `${_progress}%` }}></span>
         </div>
     )

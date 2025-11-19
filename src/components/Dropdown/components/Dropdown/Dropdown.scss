@@ -7,84 +7,86 @@
 
 @use "../../../../index" as *;
 
-.#{$prefix}-Dropdown {
+@include component(Dropdown) {
+    width: 100%;
+    height: 2.4rem;
+
     position: relative;
+
     align-items: center;
 
     box-sizing: content-box;
 
+    @include user-select(none);
+}
+
+@include component(Dropdown-Button, $input: true) {
     width: 100%;
-    height: 2.4rem;
+    height: 100%;
 
     padding: 0 2px;
 
-    @include user-select(none);
+    position: relative;
 
-    & > div {
-        position: relative;
-        display: flex;
+    display: flex;
+    align-items: center;
+
+    gap: 8px;
+
+    overflow: hidden;
+
+    box-sizing: border-box;
+
+    & > .text {
+        max-width: calc(100% - 16px);
         overflow: hidden;
+    }
 
+    & > .chevron-icon {
+        width: 16px;
+
+        top: 4px;
+        right: 0;
+
+        position: absolute;
+
+        font-size: 1.5rem;
+
+        display: flex;
         align-items: center;
-
-        box-sizing: border-box;
-        width: 100%;
-
-        height: 100%;
-
-        gap: 8px;
-
-        & > .text {
-            overflow: hidden;
-            max-width: calc(100% - 16px);
-        }
-
-        & > .chevron-icon {
-            font-size: 1.5rem;
-            position: absolute;
-
-            top: 4px;
-
-            right: 0;
-
-            display: flex;
-
-            align-items: center;
-            width: 16px;
-        }
     }
 }
 
-.#{$prefix}-Dropdown-Options {
-    position: absolute;
-    z-index: 1;
+@include component(Dropdown-Options) {
+    width: calc(100% - 1.5px);
+
     top: 39.5px;
-    left: -1px;
-    overflow: hidden;
-
-    box-sizing: content-box;
-
-    width: 100%;
+    left: 0;
 
     margin: 0;
     padding: 0;
 
+    position: absolute;
+
+    z-index: 1;
+
+    overflow: hidden;
+
+    box-sizing: content-box;
+
     list-style: none;
 
-    border: 1px solid get-colour(grey-400);
+    border: 1px solid get-var(grey-400);
 
-    backdrop-filter: blur(10px);
+    @include set(gradient-start-colour to hsla(0, 0%, 95%, 0.8));
+    @include set(gradient-end-colour to hsla(0, 0%, 85%, 0.7));
 
-    $local-var-prefix: #{$prefix}-DROPDOWN-OPTIONS;
-
-    --#{$local-var-prefix}-gradient-start-colour: hsla(0, 0%, 95%, 0.8);
-    --#{$local-var-prefix}-gradient-end-colour: hsla(0, 0%, 85%, 0.7);
-
-    @media (prefers-color-scheme: dark) {
-        --#{$local-var-prefix}-gradient-start-colour: hsla(0, 0%, 15%, 0.8);
-        --#{$local-var-prefix}-gradient-end-colour: hsla(0, 0%, 25%, 0.7);
+    @include if(dark) {
+        @include set(gradient-start-colour to hsla(0, 0%, 15%, 0.8));
+        @include set(gradient-end-colour to hsla(0, 0%, 25%, 0.7));
     }
 
-    @include gradient(vertical, var(--#{$local-var-prefix}-gradient-start-colour), var(--#{$local-var-prefix}-gradient-end-colour));
+    @include backdrop-filter(10px);
+    @include gradient(vertical, get-var(gradient-start-colour), get-var(gradient-end-colour));
     @include shadow(0, 0, 8px, 0.3);
 }

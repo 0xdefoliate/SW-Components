@@ -7,6 +7,7 @@
 
 import "./Slider.scss"
 import { type JSX, useEffect, useRef, useState } from "react"
+import { useClassName } from "../../internal/hooks/useClassName"
 import type { FormControlProps } from "../types"
 
 export interface SliderProps extends FormControlProps<number, number> {
@@ -34,12 +35,18 @@ export function Slider({ label, range, change, value, step, disabled }: SliderPr
         }
     }, [ disabled, ref ])
 
+    const classNames = {
+        wrapper: useClassName("Slider-Wrapper"),
+        label: useClassName("Slider-Label"),
+        slider: useClassName("Slider")
+    }
+
     return (
-        <label className="X-Slider-Wrapper">
-            <div className="X-Slider-Label">
+        <label className={classNames.wrapper}>
+            <div className={classNames.label}>
                 {label}
             </div>
-            <input className="X-Slider"
+            <input className={classNames.slider}
                 // TODO: DRY up these handlers
                    onMouseDown={() => {
                        const slider = ref?.current

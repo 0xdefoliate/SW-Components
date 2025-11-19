@@ -7,13 +7,13 @@
 
 @use "../../index.scss" as *;
 
-.#{$prefix}-Container {
+@include component(Container) {
     display: flex;
     flex-wrap: wrap;
 
-    box-sizing: border-box;
-
     gap: 1rem;
+
+    box-sizing: border-box;
 
     &.vertical {
         flex-direction: column;

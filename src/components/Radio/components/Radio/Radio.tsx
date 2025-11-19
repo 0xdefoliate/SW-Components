@@ -8,7 +8,8 @@
 import { type JSX, useContext, useId, useRef } from "react"
 
 import "./Radio.scss"
-import { RadioContext } from "../RadioContext"
+import { useClassName } from "../../../../internal/hooks/useClassName"
+import { RadioContext } from "../../RadioContext"
 
 export interface RadioProps {
     label: string
@@ -27,9 +28,14 @@ export function Radio({ label, value, disabled, defaultChecked }: RadioProps): J
     const radioId = useId()
     const labelId = useId()
 
+    const classNames = {
+        radio: useClassName("Radio"),
+        wrapper: useClassName("Radio-Wrapper"),
+    }
+
     return (
-        <div className="X-Radio-Wrapper">
-            <input className="X-Radio"
+        <div className={classNames.wrapper}>
+            <input className={classNames.radio}
                    type="radio"
                    name={name}
                    value={value}
@@ -43,7 +49,7 @@ export function Radio({ label, value, disabled, defaultChecked }: RadioProps): J
                        const radio = ref?.current
 
                        if (!radio) {
-                           throw new Error("React ref pointing to this element is undefined.")
+                           throw new Error("`ref` pointing to this element is undefined.")
                        }
 
                        if (!value) {

@@ -7,28 +7,32 @@
 
 @use "../../index.scss" as *;
 
-.#{$prefix}-ProgressBar {
+@include component(ProgressBar, $input: true) {
     $height: 21px;
     $radius: 2px;
-
-    position: relative;
-
-    box-sizing: content-box;
 
     width: 100%;
     height: $height;
 
+    position: relative;
+
     border-radius: $radius;
 
-    & > .progress {
-        position: absolute;
+    box-sizing: content-box;
 
+    & > .progress {
         top: 0;
         left: 0;
 
         height: $height;
 
+        position: absolute;
+
         @include gradient(horizontal, hsl(222, 90%, 50%), hsl(210, 100%, 60%));
         @include shadow(4px, 0, 8px, 0.2);
+    }
+
+    @include if(hovered) {
+        @include shadow($reset: true)
     }
 }

@@ -6,6 +6,7 @@
  */
 
 import { type JSX, useState } from "react"
+import { useClassName } from "../../internal/hooks/useClassName"
 import type { FormControlProps } from "../types"
 
 import "./TextBox.scss"
@@ -20,12 +21,17 @@ export function TextBox({ label, value, change, disabled, placeholder, subType }
     // This state is only used if no `value` is provided.
     const [ internalValue, setInternalValue ] = useState<string>("")
 
+    const classNames = {
+        wrapper: useClassName("TextInput-Wrapper"),
+        textBox: useClassName("TextInput")
+    }
+
     return (
-        <label className="X-TextInput-Wrapper">
+        <label className={classNames.wrapper}>
             <div>
                 {label}
             </div>
-            <input className="X-TextInput"
+            <input className={classNames.textBox}
                    type={subType ?? "text"}
                    value={value ?? internalValue}
                    disabled={disabled}

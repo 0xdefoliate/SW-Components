@@ -7,81 +7,105 @@
 
 @use "../../index.scss" as *;
 
-@mixin _active {
-    &:active:not(:disabled), &.__KEYBOARD_CLICK__ {
-        @content;
-    }
-}
-
 @mixin _button-border($colour) {
     border: 1px solid $colour;
-    border-radius: get-colour(default-border-radius);
+    border-radius: get-var(default-border-radius);
     outline: none;
 }
 
-.#{$prefix}-Button {
-    font-family: var(--X-default-font-family), sans-serif;
+@include component(Button) {
+    width: max-content;
+
+    color: get-var(fg);
+
+    padding: 12px;
+
+    font-family: get-var(default-font-family), sans-serif;
     font-size: 1rem;
+
     display: flex;
     align-items: center;
-    width: max-content;
-    padding: 12px;
 
     cursor: pointer;
     transition-property: background-color, box-shadow, border-color, filter, background;
 
-    color: get-colour(fg);
-
-    @include _button-border(get-colour(grey-500));
-
-    @include gradient(vertical, get-colour(bg), get-colour(grey-300));
-
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
-
-    @include user-select(none);
-
-    @include if-prefers-dark {
-        @include gradient(vertical, get-colour(grey-300), get-colour(grey-100));
-    }
-
-    @include on-disabled;
-
-    &:disabled {
+    @include if(disabled) {
         cursor: not-allowed;
         filter: $filter-argument-on-disabled;
     }
 
-    &:focus-visible {
-        box-shadow: 0 0 4px hsl(0, 0%, 50%);
-    }
+    @include user-select(none);
+    @include _button-border(get-var(grey-500));
 
     &.fluid {
         justify-content: center;
         width: 100%;
     }
 
-    @include _active {
-        @include gradient(vertical, get-colour(grey-400), get-colour(grey-300));
+    @include if(theme is aquatic) {
 
-        @include if-prefers-dark {
-            @include gradient(vertical, get-colour(grey-200), get-colour(grey-200));
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+
+        @include if(dark) {
+            @include gradient(vertical, get-var(grey-300), get-var(grey-100));
+        }
+
+        @include if(focused) {
+            box-shadow: 0 0 4px hsl(0, 0%, 50%);
+        }
+
+        @include if(clicked) {
+            @include if(dark) {
+                @include gradient(vertical, get-var(grey-200), get-var(grey-200));
+            }
+
+            @include gradient(vertical, get-var(grey-400), get-var(grey-300));
+        }
+
+        @include gradient(vertical, get-var(bg), get-var(grey-300));
+    }
+
+    @include if(theme is flat) {
+        background-color: get-var(grey-100);
+
+        @include if(clicked) {
+            &:not(.primary) {
+                filter: contrast(0.75);
+            }
         }
     }
 
     &.primary {
         color: white;
 
-        @include _button-border(get-colour(primary-brighter));
+        @include _button-border(get-var(primary-brighter));
 
-        @include gradient(vertical, get-colour(primary-brighter), get-colour(primary));
+        @include if(theme is aquatic) {
 
-        &:focus-visible {
-            border-color: get-colour(grey-200);
-            outline: 1px solid get-colour(grey-600);
+            @include if(focused) {
+                border-color: get-var(grey-200);
+                outline: 1px solid get-var(grey-600);
+            }
+
+            @include if(clicked) {
+                @include gradient(vertical, get-var(primary), get-var(primary-brighter));
+            }
+
+            @include gradient(vertical, get-var(primary-brighter), get-var(primary));
         }
 
-        @include _active {
-            @include gradient(vertical, get-colour(primary), get-colour(primary-brighter));
+        @include if(theme is flat) {
+            background-color: get-var(primary);
+
+            @include if(theme is flat) {
+                @include if(clicked) {
+                    background-color: get-var(primary-darker);
+
+                    @include if(dark) {
+                        background-color: hsl(210, 100%, 54%);
+                    }
+                }
+            }
         }
     }
 }

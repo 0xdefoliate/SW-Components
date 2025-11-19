@@ -5,10 +5,11 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@use "../../../index.scss" as *;
+@use "../../../../index" as *;
 
-.#{$prefix}-RadioGroup {
+@include component(RadioGroup) {
     display: flex;
     flex-direction: column;
+
     gap: 8px;
 }
