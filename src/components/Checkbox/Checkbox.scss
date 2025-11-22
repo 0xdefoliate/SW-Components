@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@use "../../index.scss" as *;
+@use "@/index.scss" as *;
 
 @mixin _is-checked {
     &:has(> .#{$prefix}-Checkbox-Checkmark) {
@@ -34,6 +34,12 @@
         }
     }
 
+    @include if(theme is native) {
+        @include if(os is Windows) {
+            border-radius: get-var(default-border-radius);
+        }
+    }
+
     @include _is-checked {
         border-color: get-var(grey-700);
 
@@ -46,7 +52,9 @@
         }
 
         @include if(theme is native) {
-
+            @include if(os is Windows) {
+                background-color: get-var(primary);
+            }
         }
     }
 }
@@ -57,4 +65,10 @@
 
     vertical-align: -8px;
     color: white;
+
+    @include if(theme is native) {
+        @include if(os is Windows) {
+            scale: 0.90;
+        }
+    }
 }

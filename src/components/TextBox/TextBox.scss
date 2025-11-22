@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@use "../../index.scss" as *;
+@use "@/index.scss" as *;
 
 @include component(TextInput-Wrapper) {
     width: 100%;
@@ -26,12 +26,6 @@
         @include shadow(0, 0, 2px, 0.4, true);
         border-color: get-var(grey-200);
     }
-
-    // CHECK IF IT INHERITS DISABLED CHECK FROM CASCADE
-    /*@include if(disabled) {
-        cursor: not-allowed;
-        filter: $filter-argument-on-disabled;
-    }*/
 
     @include if(focused) {
         border-radius: 0;

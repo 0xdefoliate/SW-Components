@@ -6,7 +6,7 @@
  */
 
 import { type JSX, useId, useRef, useState } from "react"
-import { useClassName } from "../../internal/hooks/useClassName"
+import { useClassName } from "@/internal/hooks/useClassName"
 
 import "./Checkbox.scss"
 

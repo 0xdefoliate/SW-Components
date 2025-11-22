@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@use "../../index.scss" as *;
+@use "@/index.scss" as *;
 
 @mixin _slider-thumb {
     &::-webkit-slider-thumb {
@@ -27,11 +27,6 @@
 
     border-radius: 4px;
 
-    /*@include if(disabled) {
-        cursor: not-allowed;
-        filter: $filter-argument-on-disabled;
-    }*/
-
     @include _slider-thumb {
         width: 12px;
         height: 28px;
@@ -41,26 +36,44 @@
         border: 1px solid get-var(grey-500);
         border-radius: 2px;
 
-        background: transparent;
+        @include appearance(none);
+    }
 
-        backdrop-filter: blur(2px);
+    @include if(theme is aquatic) {
+        @include _slider-thumb {
+            background: transparent;
 
-        @include if(hovered) {
-            backdrop-filter: blur(3px);
+            @include blur(2px);
+
+            @include if(hovered) {
+                @include blur(3px);
+            }
+
+            @include set(gradient-start-colour to hsla(0, 0%, 95%, 0.4));
+            @include set(gradient-end-colour to hsla(0, 0%, 85%, 0.4));
+
+            @include if(dark) {
+                @include set(gradient-start-colour to hsla(0, 0%, 75%, 0.4));
+                @include set(gradient-end-colour to hsla(0, 0%, 45%, 0.4));
+            }
+
+            @include gradient(vertical, get-var(gradient-start-colour), get-var(gradient-end-colour));
+
+            @include shadow($blur: 8px, $alpha: 0.3);
         }
+    }
 
-        @include set(gradient-start-colour to hsla(0, 0%, 95%, 0.4));
-        @include set(gradient-end-colour to hsla(0, 0%, 85%, 0.4));
+    @include if(theme is flat) {
+        @include _slider-thumb {
+            background-color: get-var(bg);
+            @include shadow(0, 0, $blur: 2px);
+        }
 
         @include if(dark) {
-            @include set(gradient-start-colour to hsla(0, 0%, 75%, 0.4));
-            @include set(gradient-end-colour to hsla(0, 0%, 45%, 0.4));
+            @include _slider-thumb {
+                background-color: get-var(grey-300);
+            }
         }
-
-        @include gradient(vertical, get-var(gradient-start-colour), get-var(gradient-end-colour));
-
-        @include shadow($blur: 8px, $alpha: 0.3);
-        @include appearance(none);
     }
 }
 

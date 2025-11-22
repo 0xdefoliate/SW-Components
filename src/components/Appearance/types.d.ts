@@ -7,3 +7,7 @@
 
 export type AppearanceTheme = "aquatic" | "flat" | "native"
 export type AppearanceMode = "light" | "dark" | "auto"
+export type AppearanceOS = "Android" | "iOS" | "macOS" | "Windows" | "Web"
+
+// Source: https://developer.mozilla.org/en-US/docs/Web/HTTP/Reference/Headers/Sec-CH-UA-Platform#platform
+export type DO_NOT_USE_UA_DATA_PLATFORM = "Android" | "Chrome OS" | "Chromium OS" | "iOS" | "macOS" | "Linux" | "Windows" | "Unknown"

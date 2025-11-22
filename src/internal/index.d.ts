@@ -7,7 +7,10 @@
 
 export type UseClassNameBasicOverload = string
 
+export type UseClassNameBooleanish = string | number | boolean | null | undefined
+
 export interface UseClassNameComplexOverload {
     base: string
-    appendConditionally?: Record<string, string | number | boolean | null | undefined>
+    appendConditionally?: Record<string, UseClassNameBooleanish>
+    extensions?: Record<string, UseClassNameBooleanish>
 }

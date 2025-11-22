@@ -6,27 +6,39 @@
  */
 
 import { useContext } from "react"
-import { AppearanceContext } from "../../components/Appearance/AppearanceContext"
-import { _componentPrefix } from "../../index"
-import type { UseClassNameBasicOverload, UseClassNameComplexOverload } from ".."
+import { AppearanceContext } from "@/components/Appearance/AppearanceContext"
+import { _componentPrefix } from "@/index"
+import type { UseClassNameBasicOverload, UseClassNameBooleanish, UseClassNameComplexOverload } from ".."
 
 export function useClassName(options: UseClassNameComplexOverload): string
 export function useClassName(className: UseClassNameBasicOverload): string
 export function useClassName(arg: UseClassNameComplexOverload | UseClassNameBasicOverload): string {
 
-    const { theme, mode, _actualMode } = useContext(AppearanceContext)
+    const { theme, mode, _actualMode, os } = useContext(AppearanceContext)
 
     let base: string | undefined
-    let conditions: Record<string, string | number | boolean | null | undefined> | undefined
+    let conditions: Record<string, UseClassNameBooleanish> | undefined
+    let extensions: Record<string, UseClassNameBooleanish> | undefined
 
     if (typeof arg === "string") {
         base = arg
     } else {
         base = arg.base
         conditions = arg.appendConditionally
+        extensions = arg.extensions
     }
 
     let className = `${_componentPrefix}-${base}`
+
+    if (extensions) {
+        for (const [ key, value ] of Object.entries(extensions) ) {
+            if (!value) {
+                continue
+            }
+
+            className += `--${key}`
+        }
+    } 
 
     if (conditions) {
         for (const [ key, value ] of Object.entries(conditions)) {
@@ -46,5 +58,5 @@ export function useClassName(arg: UseClassNameComplexOverload | UseClassNameBasi
         _mode = "light"
     }
 
-    return `${className} theme-${theme} mode-${_mode}`
+    return `${className} theme-${theme} mode-${_mode} os-${os}`
 }

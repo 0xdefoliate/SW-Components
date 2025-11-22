@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@use "../../../../index" as *;
+@use "@/index" as *;
 
 @include component(Radio-Wrapper) {
     width: max-content;
@@ -24,12 +24,20 @@
 
     margin: 0;
 
-    transition-property: border, box-shadow;
+    transition-property: filter, border, box-shadow;
 
     border-radius: 100%;
 
     @include if(checked) {
-        border: 6px solid get-var(primary-brighter);
+        border: 4.5px solid get-var(primary-brighter);
+    }
+
+    @include if(theme is native) {
+        @include if(os is Windows) {
+            @include if(checked) {
+                border-color: get-var(primary);
+            }
+        }
     }
 
     @include if(disabled, $also: "+ label") {

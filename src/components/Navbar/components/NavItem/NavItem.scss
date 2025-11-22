@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@use "../../../../index" as *;
+@use "@/index" as *;
 
 @include component(NavItem) {
     width: 100%;

@@ -8,7 +8,7 @@
 import { type JSX, useContext, useId, useRef } from "react"
 
 import "./Radio.scss"
-import { useClassName } from "../../../../internal/hooks/useClassName"
+import { useClassName } from "@/internal/hooks/useClassName"
 import { RadioContext } from "../../RadioContext"
 
 export interface RadioProps {

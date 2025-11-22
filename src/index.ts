@@ -25,6 +25,6 @@ export { Appearance } from "./components/Appearance/Appearance"
 
 export type * from "./components/types"
 
-export const _componentPrefix = "X"
+export const _componentPrefix = import.meta.env.VITE_COMPONENT_PREFIX
 
 import "./index.scss"

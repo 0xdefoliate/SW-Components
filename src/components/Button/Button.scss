@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@use "../../index.scss" as *;
+@use "@/index.scss" as *;
 
 @mixin _button-border($colour) {
     border: 1px solid $colour;
@@ -35,7 +35,10 @@
     }
 
     @include user-select(none);
-    @include _button-border(get-var(grey-500));
+
+    @include if(_not theme is native) {
+        @include _button-border(get-var(grey-500));
+    }
 
     &.fluid {
         justify-content: center;
@@ -75,37 +78,70 @@
         }
     }
 
-    &.primary {
-        color: white;
-
-        @include _button-border(get-var(primary-brighter));
-
-        @include if(theme is aquatic) {
-
-            @include if(focused) {
-                border-color: get-var(grey-200);
-                outline: 1px solid get-var(grey-600);
-            }
-
-            @include if(clicked) {
-                @include gradient(vertical, get-var(primary), get-var(primary-brighter));
-            }
-
-            @include gradient(vertical, get-var(primary-brighter), get-var(primary));
+    @include if(theme is native) {
+        @include if(light, $only: self) {
+            background-color: ButtonFace;
+            color: ButtonText;
         }
 
+        @include if(disabled) {
+            background-color: get-var(grey-100);
+            color: GrayText;
+        }
+
+        @include shadow(1px, 1px, $blur: 2px, $alpha: 0.1);
+
+        border: 1px solid get-var(grey-300);
+        padding: 10px;
+
+        @include if(os is Windows) {
+            padding: 10px 8px;
+            border-radius: 4px;
+            @include shadow(1px, 2px, $blur: 2px, $alpha: 0.1);
+        }
+
+        @include if(os is Windows, $only: self) {
+            background-color: get-var(bg);
+            border-color: get-var(grey-300);
+        }
+    }
+}
+
+@include extension($source: Button, $new: primary) {
+    color: white;
+
+    @include if(theme is aquatic) {
+        @include if(focused) {
+            border-color: get-var(grey-200);
+            outline: 1px solid get-var(grey-600);
+        }
+
+        @include if(clicked) {
+            @include gradient(vertical, get-var(primary), get-var(primary-brighter));
+        }
+
+        @include gradient(vertical, get-var(primary-brighter), get-var(primary));
+    }
+
+    @include if(_not theme is aquatic) {
+        background-color: get-var(primary);
+
         @include if(theme is flat) {
-            background-color: get-var(primary);
+            @include if(clicked) {
+                background-color: get-var(primary-darker);
 
-            @include if(theme is flat) {
-                @include if(clicked) {
-                    background-color: get-var(primary-darker);
-
-                    @include if(dark) {
-                        background-color: hsl(210, 100%, 54%);
-                    }
+                @include if(dark) {
+                    background-color: hsl(210, 100%, 54%);
                 }
             }
         }
+    }
+
+    @include if(_not theme is native) {
+        @include _button-border(get-var(primary-brighter));
+    }
+
+    @include if(theme is native) {
+        background-color: get-var(primary);
     }
 }

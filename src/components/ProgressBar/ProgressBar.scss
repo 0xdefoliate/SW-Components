@@ -5,7 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@use "../../index.scss" as *;
+@use "@/index.scss" as *;
 
 @include component(ProgressBar, $input: true) {
     $height: 21px;
@@ -27,12 +27,26 @@
         height: $height;
 
         position: absolute;
-
-        @include gradient(horizontal, hsl(222, 90%, 50%), hsl(210, 100%, 60%));
-        @include shadow(4px, 0, 8px, 0.2);
     }
 
+    @include if(theme is aquatic) {
+        & > .progress {
+            @include gradient(horizontal, hsl(222, 90%, 50%), hsl(210, 100%, 60%));
+            @include shadow(4px, 0, 8px, 0.2);
+        }
+    }
+
+    @include if(_not theme is aquatic) {
+        & > .progress {
+            background-color: get-var(primary);
+            @include shadow(4px, 0, 5px, 0.1);
+        }
+    }
+
+    // Don't reflect the presence of the cursor hovering so
+    // users understand this element isn't interactable with directly.
     @include if(hovered) {
-        @include shadow($reset: true)
+        box-shadow: none !important;
+        filter: none !important;
     }
 }

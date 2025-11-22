@@ -20,7 +20,7 @@ import {
 } from "react"
 
 import "./Dropdown.scss"
-import { useClassName } from "../../../../internal/hooks/useClassName"
+import { useClassName } from "@/internal/hooks/useClassName"
 import { DropdownContext } from "../../DropdownContext"
 import { useChildIDs } from "../../hooks/useChildIDs"
 import { useOnClickOutside } from "../../hooks/useOnClickOutside"

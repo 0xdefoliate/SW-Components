@@ -98,6 +98,13 @@ export function App(): JSX.Element {
                                 <Checkbox label="Checkbox" />
                                 <Checkbox label="Disabled" disabled />
                             </Container>
+
+                            <Container paddingTop={12}>
+                                Static (non-fluid) buttons
+                                <Button>
+                                    Hello, world
+                                </Button>
+                            </Container>
                         </Group>
                     </Container>
 

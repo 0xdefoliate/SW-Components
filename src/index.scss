@@ -10,83 +10,198 @@
 @use "sass:string";
 @use "sass:meta";
 
-$prefix: X;
-$mobile-width: 650px;
-$filter-argument-on-disabled: contrast(0.6);
-$themes: (aquatic, flat, native);
+@use "scss/constants" as *;
+@forward "scss/constants";
 
-@mixin if($condition, $selector: "&", $also: false, $top-level: false) {
+// This function gets the right-hand-side value of `x is y` conditions,
+// which means, in that example, that the right-hand-side value is "y".
+@function DO-NOT-USE-get-right-hand-side-of-is-comparison($condition) {
+    $rv: null;
+
+    // $condition is sometimes a list, and sometimes a string.
+    // Not really sure why, but Sass is a strange language.
+    @if meta.type-of($condition) == "string" {
+        $tmp: string.split($condition, " ");
+        $rv: list.nth($tmp, list.length($tmp));
+    } @else {
+        $rv: list.nth($condition, list.length($condition));
+    }
+
+    @return $rv;
+}
+
+// TODO: Make this function less like a big ball of mud.
+@mixin if($condition: "", $selector: "&", $also: false, $top-level: false, $only: null) {
 
     @if $selector == "&" and $top-level == true {
         $selector: ""
     }
 
-    @if $condition == dark or $condition == light {
-        #{$selector}.mode-#{$condition} {
-            @content;
+    @if $only == self and not $top-level {
+        $selector: "#{$selector}:not([class*='--'])";
+    } @else if $only == children and not $top-level {
+        $selector: "#{$selector} *";
+    }
+
+    $negated: string.index(#{$condition}, "_not") == 1;
+    @if $negated {
+        // Omit the "_not" token
+        $new-list: ();
+        @for $i from 1 through list.length($condition) {
+            @if $i >= 2 {
+                $new-list: list.append($new-list, list.nth($condition, $i));
+            }
         }
-    } @else if $condition == hovered {
-        @media (hover: hover) {
-            #{$selector}:hover {
+        $condition: #{$new-list};
+    }
+
+    @if $condition == dark or $condition == light {
+        @if $negated {
+            $mode: dark;
+
+            // If not dark
+            @if $condition == dark {
+                $mode: light;
+            }
+
+            #{$selector}.mode-#{$mode} {
+                @content;
+            }
+        } @else {
+            #{$selector}.mode-#{$condition} {
                 @content;
             }
         }
-    } @else if $condition == disabled {
-        #{$selector}:disabled,
-        #{$selector}.disabled,
-        #{$selector}[aria-disabled="true"] {
-            @content;
-        }
-
-        @if $also {
-            #{$selector}:disabled #{$also},
-            #{$selector}.disabled #{$also},
-            #{$selector}[aria-disabled="true"] #{$also} {
+    } @else if $condition == hovered {
+        @if $negated {
+            #{$selector}:not(:hover) {
                 @content
             }
+        } @else {
+            @media (hover: hover) {
+                #{$selector}:hover {
+                    @content;
+                }
+            }
         }
+    } @else if $condition == disabled {
+        @if $negated {
+            #{$selector}:not(:disabled):not(.disabled):not([aria-disabled="true"]) {
+                @content;
+            }
 
+            @if $also {
+                #{$selector}:not(:disabled):not(.disabled):not([aria-disabled="true"]) #{$also} {
+                    @content;
+                }
+            }
+        } @else {
+            #{$selector}:disabled,
+            #{$selector}.disabled,
+            #{$selector}[aria-disabled="true"] {
+                @content;
+            }
+
+            @if $also {
+                #{$selector}:disabled #{$also},
+                #{$selector}.disabled #{$also},
+                #{$selector}[aria-disabled="true"] #{$also} {
+                    @content;
+                }
+            }
+        }
     } @else if $condition == focused {
-        #{$selector}:focus-visible {
-            @content;
+        @if $negated {
+            #{$selector}:not(:focus-visible) {
+                @content;
+            }
+        } @else {
+            #{$selector}:focus-visible {
+                @content;
+            }
         }
     }
         // Basically, any condition which starts with "theme is ...", do X.
     @else if string.index(#{$condition}, "theme is") == 1 {
-
-        $theme: list.nth($condition, list.length($condition));
+        $theme: DO-NOT-USE-get-right-hand-side-of-is-comparison($condition);
 
         // Check if user passed an invalid theme
         @if list.index($themes, $theme) == null {
-            @error "Bad theme: #{$theme}."
+            @error "Bad theme: #{$theme}.";
         }
 
-        #{$selector}.theme-#{$theme} {
-            @content
+        @if $negated {
+            #{$selector}:not(.theme-#{$theme}) {
+                @content;
+            }
+        } @else {
+            #{$selector}.theme-#{$theme} {
+                @content;
+            }
+        }
+    } @else if string.index(#{$condition}, "os is") == 1 {
+        $os: DO-NOT-USE-get-right-hand-side-of-is-comparison($condition);
+
+        @if $negated {
+            #{$selector}:not(.os-#{$os}) {
+                @content;
+            }
+        } @else {
+            #{$selector}.os-#{$os} {
+                @content;
+            }
         }
     } @else if $condition == clicked {
         $not-disabled-selector: ":not(:disabled):not(.disabled)";
 
-        #{$selector}#{$not-disabled-selector}:active,
-        #{$selector}#{$not-disabled-selector}.__KEYBOARD_CLICK__ {
-            @content;
-        }
-    } @else if $condition == checked {
-        #{$selector}:checked {
-            @content;
-        }
-
-        @if $also {
-            #{$selector}:checked #{$also} {
+        @if $negated {
+            #{$selector}:not(:active):not(.__KEYBOARD_CLICK__) {
+                @content;
+            }
+        } @else {
+            #{$selector}#{$not-disabled-selector}:active,
+            #{$selector}#{$not-disabled-selector}.__KEYBOARD_CLICK__ {
                 @content;
             }
         }
+    } @else if $condition == checked {
+        @if $negated {
+            #{$selector}:not(:checked) {
+                @content;
+            }
+
+            @if $also {
+                #{$selector}:not(:checked) #{also} {
+                    @content;
+                }
+            }
+        } @else {
+            #{$selector}:checked {
+                @content;
+            }
+
+            @if $also {
+                #{$selector}:checked #{$also} {
+                    @content;
+                }
+            }
+        }
     } @else if $condition == mobile {
-        @media (max-width: $mobile-width) {
+        @if $negated {
+            @media (min-width: $mobile-width) {
+                @content;
+            }
+        } @else {
+            @media (max-width: $mobile-width) {
+                @content;
+            }
+        }
+    } @else if $condition == "" {
+        #{$selector} {
             @content;
         }
     } @else {
-        @error "Bad condition to check: #{$condition}."
+        @error "Bad condition to check: '#{$condition}'."
     }
 }
 
@@ -125,7 +240,7 @@ $themes: (aquatic, flat, native);
     }
 }
 
-@mixin backdrop-filter($value) {
+@mixin blur($value) {
     -webkit-backdrop-filter: blur($value);
     backdrop-filter: blur($value);
 }
@@ -155,11 +270,18 @@ $themes: (aquatic, flat, native);
 
 @mixin component($name, $input: false) {
     .#{$prefix}-#{$name} {
-        @content;
-
         @if $input {
-            @extend .#{$prefix}-GENERIC-INPUT-BASE-STYLE;
+            @include base-input-style
         }
+
+        @content;
+    }
+}
+
+@mixin extension($source, $new) {
+    .#{$prefix}-#{$source}--#{$new} {
+        @extend .#{$prefix}-#{$source};
+        @content;
     }
 }
 
@@ -185,7 +307,7 @@ $themes: (aquatic, flat, native);
     }
 
     @include if(theme is native) {
-        @include set(default-font-family to system-ui);
+        @include set(default-font-family to "-apple-system, \"Segoe UI\", system-ui");
     }
 
     @include set(default-font-size to 1rem);
@@ -202,6 +324,15 @@ $themes: (aquatic, flat, native);
     @include set(primary to rgb(0, 100, 255));
     @include set(primary-brighter to rgb(0, 150, 255));
     @include set(primary-darker to rgb(0, 50, 255));
+
+    @include if(theme is native) {
+        @include if(os is Windows) {
+            @include set(primary to rgb(32, 114, 243));
+
+            //@include set(primary-brighter to rgb(0, 150, 255));
+            //@include set(primary-darker to rgb(0, 50, 255));
+        }
+    }
 
     $greys: (
         light: (
@@ -255,6 +386,12 @@ $themes: (aquatic, flat, native);
 
     @include set(default-border-radius to 6px);
 
+    @include if(theme is native) {
+        @include if(os is macOS) {
+            @include set(default-border-radius to 2px);
+        }
+    }
+
     /*
      * Navbar
      */
@@ -275,9 +412,13 @@ $themes: (aquatic, flat, native);
     box-sizing: border-box;
     transition-duration: get-var(transition-duration) !important;
 
-    transition-property: box-shadow, border-color;
+    transition-property: box-shadow, filter, border-color;
 
-    color-scheme: light dark;
+    color-scheme: light;
+
+    @include if(dark) {
+        color-scheme: dark;
+    }
 }
 
 body {
@@ -297,9 +438,8 @@ body {
     }
 }
 
-// This class is a set of multiple properties and similar
-// which, together, form a base of a mutual style for inputs.
-.#{$prefix}-GENERIC-INPUT-BASE-STYLE {
+
+@mixin base-input-style {
 
     color: get-var(fg);
 
@@ -316,19 +456,26 @@ body {
         @include gradient(vertical, get-var(grey-200), get-var(grey-100));
 
         @include if(dark) {
-            border-color: get-var(grey-500);
+
+            // Prevent radio buttons' colour from showing as grey-500 when checked.
+            @include if(_not checked) {
+                border-color: get-var(grey-500);
+            }
+
             @include gradient(vertical, get-var(grey-100), get-var(grey-200));
         }
 
         @include if(hovered) {
-            $shadow-x: 0;
-            $shadow-y: 0;
-            $shadow-blur: 6px;
+            @include if(_not disabled) {
+                $shadow-x: 0;
+                $shadow-y: 0;
+                $shadow-blur: 6px;
 
-            @include shadow($shadow-x, $shadow-y, $shadow-blur, 0.2, true);
+                @include shadow($shadow-x, $shadow-y, $shadow-blur, 0.2, true);
 
-            @include if(dark) {
-                @include shadow($shadow-x, $shadow-y, $shadow-blur, get-var(grey-600), true);
+                @include if(dark) {
+                    @include shadow($shadow-x, $shadow-y, $shadow-blur, 0.7, true);
+                }
             }
         }
     }
@@ -336,15 +483,24 @@ body {
     @include if(theme is flat) {
         background-color: get-var(grey-100);
 
-        transition-property: filter;
-
         @include if(hovered) {
             filter: contrast(0.95);
 
             @include if(disabled) {
                 filter: $filter-argument-on-disabled;
             }
+        }
+    }
 
+    @include if(theme is native) {
+        @include if(os is Windows) {
+            &:not(.#{$prefix}-Radio) {
+                border-radius: 4px;
+            }
+
+            &:not(.#{$prefix}-Slider) {
+
+            }
         }
     }
 }

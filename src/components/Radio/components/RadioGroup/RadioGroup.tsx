@@ -6,7 +6,7 @@
  */
 
 import { type JSX, type ReactNode } from "react"
-import { useClassName } from "../../../../internal/hooks/useClassName"
+import { useClassName } from "@/internal/hooks/useClassName"
 import { RadioContext } from "../../RadioContext"
 
 import "./RadioGroup.scss"

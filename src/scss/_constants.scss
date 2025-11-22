@@ -5,11 +5,8 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@use "@/index" as *;
+@forward "./_dynamic_constants";
 
-@include component(RadioGroup) {
-    display: flex;
-    flex-direction: column;
-
-    gap: 8px;
-}
+$mobile-width: 650px;
+$filter-argument-on-disabled: contrast(0.6);
+$themes: (aquatic, flat, native);

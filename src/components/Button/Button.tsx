@@ -6,7 +6,7 @@
  */
 
 import { type JSX, type ReactNode, useRef } from "react"
-import { useClassName } from "../../internal/hooks/useClassName"
+import { useClassName } from "@/internal/hooks/useClassName"
 
 import "./Button.scss"
 
@@ -24,8 +24,11 @@ export function Button({ children, primary, click, disabled, fluid }: ButtonProp
 
     const className = useClassName({
         base: "Button",
+
+        extensions: {
+            primary
+        },
         appendConditionally: {
-            primary,
             fluid
         }
     })

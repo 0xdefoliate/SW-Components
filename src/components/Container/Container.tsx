@@ -8,7 +8,7 @@
 import { type CSSProperties, type JSX, type ReactNode } from "react"
 
 import "./Container.scss"
-import { useClassName } from "../../internal/hooks/useClassName"
+import { useClassName } from "@/internal/hooks/useClassName"
 
 export interface ContainerProps {
     children: ReactNode

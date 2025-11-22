@@ -6,7 +6,7 @@
  */
 
 import { createContext } from "react"
-import type { AppearanceMode, AppearanceTheme } from "./types"
+import type { AppearanceMode, AppearanceOS, AppearanceTheme } from "./types"
 
 export const AppearanceContext = createContext<{
     theme: AppearanceTheme
@@ -14,6 +14,7 @@ export const AppearanceContext = createContext<{
     setTheme: (theme: AppearanceTheme) => void
     setMode: (mode: AppearanceMode) => void
     _actualMode?: "light" | "dark"
+    os: AppearanceOS
 }>({
     theme: "aquatic",
     mode: "auto",
@@ -24,5 +25,7 @@ export const AppearanceContext = createContext<{
 
     setMode: (): void => {
         throw Error("Not implemented")
-    }
+    },
+
+    os: "Web"
 })
