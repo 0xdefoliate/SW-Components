@@ -1,0 +1,105 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "media"
+@use "state"
+@use "icon"
+@use "colour"
+
+@include component(Dropdown-Option)
+    padding: 4px
+
+    display: flex
+    align-items: center
+
+    gap: 4px
+
+    @include state.focus-visible
+        border-radius: 0
+        outline-style: solid
+        outline-offset: -1px
+        @include colour.border(primary)
+
+
+    @include media.query("theme: aquatic")
+        @include state.hover
+            @include shadow(0, 0, 6px, 0.3, true)
+
+        @include state.active
+            @include shadow(0, 0, 12px, 0.3, true)
+
+        @include state.focus-visible
+            @include shadow(0, 0, 8px, 0.3, true)
+
+
+    @include media.query("theme: flat")
+        @include colour.background(inherit)
+
+        transition-property: filter
+
+        @include state.hover
+            filter: contrast(0.95)
+
+        @include state.active
+            filter: contrast(0.9)
+
+
+    @include media.query("not theme: native")
+        &:not(:last-child)
+            border-bottom: 1px solid
+            @include colour.border(grey-300, $for: ("bottom"))
+
+
+    @include media.query("theme: native and os: Windows")
+        @include colour.background(inherit)
+
+        border: none
+        padding: 6px
+
+        cursor: pointer
+
+        transition-property: none
+
+        @include state.focus-visible
+            &:first-of-type
+                border-top-left-radius: inherit
+                border-top-right-radius: inherit
+
+            &:last-of-type
+                border-bottom-left-radius: inherit
+                border-bottom-right-radius: inherit
+
+            outline-offset: -1px
+
+
+        @include state.hover
+            filter: contrast(0.85)
+
+        @include state.active
+            filter: contrast(0.75)
+
+
+@include component(Dropdown-Option-Check-Indicator)
+    width: 20px
+    height: 20px
+
+    display: flex
+    align-items: center
+    justify-content: center
+
+    &[data-checked="true"]::after
+        width: 16px
+        height: 16px
+
+        @include icon.use("check2")
+
+        @include media.query("theme: native and os: Windows")
+            @include icon.use("check-lg")

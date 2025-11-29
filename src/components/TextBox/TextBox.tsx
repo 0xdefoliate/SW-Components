@@ -6,10 +6,10 @@
  */
 
 import { type JSX, useState } from "react"
-import { useClassName } from "../../internal/hooks/useClassName"
+import { getClassName } from "../../internal/hooks/getClassName"
 import type { FormControlProps } from "../types"
 
-import "./TextBox.scss"
+import "./TextBox.sass"
 
 export interface TextBoxProps extends FormControlProps<string, string> {
     placeholder?: string
@@ -22,8 +22,8 @@ export function TextBox({ label, value, change, disabled, placeholder, subType }
     const [ internalValue, setInternalValue ] = useState<string>("")
 
     const classNames = {
-        wrapper: useClassName("TextInput-Wrapper"),
-        textBox: useClassName("TextInput")
+        wrapper: getClassName("TextInput-Wrapper"),
+        textBox: getClassName("TextInput")
     }
 
     return (

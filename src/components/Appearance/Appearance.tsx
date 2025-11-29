@@ -39,14 +39,10 @@ export function Appearance({ children, options }: AppearanceProps): JSX.Element 
     )
 
     useEffect(() => {
-        let className = `theme-${theme} mode-${internalMode}`
-
-        if (osRef.current) {
-            className += ` os-${osRef.current}`
+        for (const [key, value] of Object.entries({ theme, os: osRef.current ?? "Web", mode: internalMode })) {
+            document.body.dataset[key as string] = value as string
+            document.documentElement.dataset[key as string] = value as string
         }
-
-        document.documentElement.className = className
-        document.body.className = className
     }, [ theme, internalMode ])
 
     useEffect(() => {

@@ -6,9 +6,9 @@
  */
 
 import { type JSX, useId, useRef, useState } from "react"
-import { useClassName } from "@/internal/hooks/useClassName"
+import { getClassName } from "@/internal/hooks/getClassName"
 
-import "./Checkbox.scss"
+import "./Checkbox.sass"
 
 export interface CheckboxProps {
     label: string
@@ -34,15 +34,15 @@ export function Checkbox({ label, checked, change, disabled }: CheckboxProps): J
     }
 
     const classNames = {
-        checkbox: useClassName({
+        checkbox: getClassName({
             base: "Checkbox",
             appendConditionally: {
                 disabled
             }
         }),
 
-        wrapper: useClassName("Checkbox-Wrapper"),
-        checkmark: useClassName("Checkbox-Checkmark")
+        wrapper: getClassName("Checkbox-Wrapper"),
+        checkmark: getClassName("Checkbox-Checkmark")
     }
 
     const checkBoxID = useId()
@@ -68,15 +68,7 @@ export function Checkbox({ label, checked, change, disabled }: CheckboxProps): J
                  ref={checkboxRef}
                  aria-disabled={disabled}>
                 {value && (
-                    <svg className={classNames.checkmark}
-                         aria-hidden="true"
-                         xmlns="http://www.w3.org/2000/svg"
-                         width="16"
-                         height="16"
-                         fill="currentColor"
-                         viewBox="0 0 16 16">
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
-                    </svg>
+                    <span className={classNames.checkmark} aria-hidden="true"></span>
                 )}
             </div>
 

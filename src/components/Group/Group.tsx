@@ -7,8 +7,8 @@
 
 import type { JSX, ReactNode } from "react"
 
-import "./Group.scss"
-import { useClassName } from "../../internal/hooks/useClassName"
+import "./Group.sass"
+import { getClassName } from "../../internal/hooks/getClassName"
 
 export interface GroupProps {
     legend: string
@@ -18,8 +18,8 @@ export interface GroupProps {
 export function Group({ legend, children }: GroupProps): JSX.Element {
 
     const classNames = {
-        group: useClassName("Group"),
-        wrapper: useClassName("Group-Container"),
+        group: getClassName("Group"),
+        wrapper: getClassName("Group-Container"),
     }
 
     return (

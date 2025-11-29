@@ -5,9 +5,9 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import "./ProgressBar.scss"
+import "./ProgressBar.sass"
 import { type JSX, useEffect, useRef } from "react"
-import { useClassName } from "../../internal/hooks/useClassName"
+import { getClassName } from "../../internal/hooks/getClassName"
 
 export function ProgressBar({ progress }: { progress: number }): JSX.Element {
 
@@ -56,7 +56,7 @@ export function ProgressBar({ progress }: { progress: number }): JSX.Element {
         }
     }, [ _progress ])
 
-    const className = useClassName("ProgressBar")
+    const className = getClassName("ProgressBar")
 
     return (
         <div className={className} title={`Progress: ${_progress}%`}>

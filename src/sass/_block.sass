@@ -5,8 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-@forward "./_dynamic_constants";
+@mixin overridable
+    :where(&)
+        @content
 
-$mobile-width: 650px;
-$filter-argument-on-disabled: contrast(0.6);
-$themes: (aquatic, flat, native);

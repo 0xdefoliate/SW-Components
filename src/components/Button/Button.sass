@@ -1,0 +1,169 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "global"
+@use "state"
+@use "media"
+@use "colour"
+@use "icon"
+@use "var"
+@use "block"
+
+@mixin _button-border($colour, $border-radius: var.get(default-border-radius))
+    border: 1px solid
+    @include colour.border($colour)
+
+    @if $border-radius != "default"
+        border-radius: $border-radius
+
+    outline: none
+
+
+@include component(Button)
+    width: max-content
+
+    @include colour.foreground(fg)
+
+    padding: 12px
+
+    border-radius: var.get(default-border-radius)
+
+    font-family: var.get(default-font-family), sans-serif
+    font-size: 1rem
+
+    display: flex
+    align-items: center
+
+    cursor: pointer
+    transition-property: background-color, box-shadow, border-color, filter, background
+
+    @include _button-border(grey-400)
+    @include user-select(none)
+
+    &.fluid
+        justify-content: center
+        width: 100%
+
+
+    @include state.disabled
+        cursor: not-allowed
+        filter: global.$filter-argument-on-disabled
+        @include shadow($reset: true)
+
+
+    @include media.query("theme: aquatic")
+
+        text-shadow: 0 1px 0 rgba(0, 0, 0, 0.1)
+
+        @include gradient(vertical, colour.get(bg), colour.get(grey-300))
+
+        @include media.query("mode: dark")
+            @include gradient(vertical, colour.get(grey-300), colour.get(grey-100))
+
+        @include state.focus-visible
+            box-shadow: 0 0 4px hsl(0, 0%, 50%)
+
+        @include state.active
+            @include gradient(vertical, colour.get(grey-400), colour.get(grey-300))
+
+            @include media.query("mode: dark")
+                @include gradient(vertical, colour.get(grey-200), colour.get(grey-200))
+
+
+    @include media.query("theme: flat")
+        background-color: colour.get(grey-100)
+
+        @include state.active
+            &:where(&:not(.primary))
+                filter: contrast(0.75)
+
+
+    @include media.query("theme: native")
+        @include colour.background($light: ButtonFace, $dark: grey-300)
+        @include colour.foreground($light: ButtonText, $dark: grey-900)
+
+        @include state.disabled
+            @include colour.background(grey-100)
+            @include colour.foreground($light: GrayText, $dark: grey-500)
+
+        @include shadow(1px, 1px, $blur: 2px, $alpha: 0.1)
+
+        padding: 10px
+
+
+    @include media.query("theme: native and os: Windows")
+        @include colour.background($light: bg, $dark: grey-300)
+        padding: 10px 8px
+
+        $border-radius: 4px
+
+        @include _button-border(colour.get(grey-300), $border-radius)
+
+        @include shadow(1px, 2px, $blur: 2px, $alpha: 0.1)
+
+        @include state.hover
+            filter: contrast(0.95)
+            @include shadow(1px, 2px, $blur: 8px, $alpha: 0.15)
+
+        @include state.active
+            filter: contrast(0.65)
+
+        @include state.focus-visible
+            @include _button-border(colour.get(primary), $border-radius)
+
+
+    @include block.overridable
+        @include state.focus-visible
+            @include _button-border(colour.get(primary), $border-radius: default)
+
+
+@include extension($source: Button, $new: primary)
+
+    @include colour.foreground(white)
+    @include colour.border(primary-brighter)
+
+    @include media.query("theme: aquatic")
+        @include state.focus-visible
+            @include colour.border(grey-200)
+            outline: 1px solid colour.get(grey-600)
+
+        @include state.active
+            @include gradient(vertical, colour.get(primary), colour.get(primary-brighter))
+
+
+        @include gradient(vertical, colour.get(primary-brighter), colour.get(primary))
+
+
+    @include media.query("not theme: aquatic")
+        background-color: colour.get(primary)
+
+
+    @include media.query("theme: flat")
+        @include state.active
+            @include colour.background(
+                $light: primary-darker,
+                $dark: hsl(210, 100%, 54%)
+            )
+
+
+    @include media.query("theme: native")
+        @include colour.border(primary)
+
+
+    @include state.active
+        @include media.query("theme: native and os: Windows")
+            filter: none
+            @include colour.background($light: primary-darker, $dark: rgb(0, 156, 255))
+
+
+    @include state.focus-visible
+        @include shadow($important: true)
+        @include colour.border(grey-300)

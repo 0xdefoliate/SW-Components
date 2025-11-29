@@ -27,4 +27,4 @@ export type * from "./components/types"
 
 export const _componentPrefix = import.meta.env.VITE_COMPONENT_PREFIX
 
-import "./index.scss"
+import "./index.sass"

@@ -1,0 +1,37 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "media"
+@use "state"
+@use "colour"
+@use "var"
+
+@include component(TextInput-Wrapper)
+    width: 100%
+
+
+@include component(TextInput, $input: true)
+    font-family: var.get(default-font-family), sans-serif
+    font-size: var.get(default-font-size)
+
+    width: 100%
+    padding: 6px 4px
+
+    outline: none
+
+    @include media.query("theme: aquatic")
+        @include colour.border(grey-200)
+
+        @include state.not-hover
+            @include shadow(0, 0, 2px, 0.4, true)
+
+        @include state.focus
+            @include colour.border(primary-brighter)

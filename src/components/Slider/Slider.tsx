@@ -5,9 +5,9 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import "./Slider.scss"
+import "./Slider.sass"
 import { type JSX, useEffect, useRef, useState } from "react"
-import { useClassName } from "../../internal/hooks/useClassName"
+import { getClassName } from "../../internal/hooks/getClassName"
 import type { FormControlProps } from "../types"
 
 export interface SliderProps extends FormControlProps<number, number> {
@@ -36,9 +36,9 @@ export function Slider({ label, range, change, value, step, disabled }: SliderPr
     }, [ disabled, ref ])
 
     const classNames = {
-        wrapper: useClassName("Slider-Wrapper"),
-        label: useClassName("Slider-Label"),
-        slider: useClassName("Slider")
+        wrapper: getClassName("Slider-Wrapper"),
+        label: getClassName("Slider-Label"),
+        slider: getClassName("Slider")
     }
 
     return (

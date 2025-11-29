@@ -1,0 +1,55 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "media"
+@use "state"
+@use "colour"
+@use "var"
+
+@include component(ProgressBar, $input: true)
+    $height: 21px
+    $radius: 2px
+
+    width: 100%
+    height: $height
+
+    position: relative
+
+    border-radius: $radius
+
+    box-sizing: content-box
+
+    & > .progress
+        top: 0
+        left: 0
+
+        height: $height
+
+        position: absolute
+
+
+    @include media.query("theme: aquatic")
+        & > .progress
+            @include gradient(horizontal, hsl(222, 90%, 50%), hsl(210, 100%, 60%))
+            @include shadow(4px, 0, 8px, 0.2)
+
+
+    @include media.query("not theme: aquatic")
+        & > .progress
+            @include colour.background(primary)
+            @include shadow(4px, 0, 5px, 0.1)
+
+
+    // Don't reflect the presence of the cursor hovering so
+    // users understand this element isn't interactable with directly.
+    @include state.hover
+        box-shadow: none !important
+        filter: none !important

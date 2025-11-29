@@ -5,6 +5,7 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
+import { AppearanceContext } from "@/components/Appearance/AppearanceContext"
 import {
     Children,
     cloneElement,
@@ -12,15 +13,15 @@ import {
     type JSX,
     type ReactElement,
     type ReactNode,
-    type RefObject,
+    type RefObject, useContext,
     useEffect,
     useId,
     useRef,
     useState
 } from "react"
 
-import "./Dropdown.scss"
-import { useClassName } from "@/internal/hooks/useClassName"
+import "./Dropdown.sass"
+import { getClassName } from "@/internal/hooks/getClassName"
 import { DropdownContext } from "../../DropdownContext"
 import { useChildIDs } from "../../hooks/useChildIDs"
 import { useOnClickOutside } from "../../hooks/useOnClickOutside"
@@ -49,6 +50,8 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
     useOnClickOutside(dropdownButtonRef, dropdownOptionsRef, () => {
         setActive(false)
     })
+
+    const { theme, os } = useContext(AppearanceContext);
 
     const childIDs = useChildIDs(children)
 
@@ -101,7 +104,7 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
                 case "Escape":
                     setFocusedOption(selectedOption)
                     setActive(false)
-                    dropdownRef.current?.focus()
+                    dropdownButtonRef.current?.focus()
                     return
                 case "Tab": {
                     preventDefault()
@@ -201,9 +204,9 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
     }, [ selectedOption, chosen ])
 
     const classNames = {
-        dropdown: useClassName("Dropdown"),
-        button: useClassName("Dropdown-Button"),
-        options: useClassName("Dropdown-Options")
+        dropdown: getClassName("Dropdown"),
+        button: getClassName("Dropdown-Button"),
+        options: getClassName("Dropdown-Options")
     }
 
     return (
@@ -241,6 +244,7 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
                      role="button"
                      aria-label="Toggle Dropdown"
                      aria-disabled={disabled}
+                     tabIndex={-1}
                      onClick={() => {
                          if (!disabled) {
                              setActive(!active)
@@ -249,9 +253,7 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
 
                     <span className="text" ref={dropdownPreviewRef}></span>
 
-                    <span className="chevron-icon" aria-hidden="true">
-                        &#x25BE;
-                    </span>
+                    <span className="chevron-icon" aria-hidden="true"></span>
                 </div>
 
                 <ul className={classNames.options}

@@ -10,11 +10,9 @@ import { AppearanceContext } from "@/components/Appearance/AppearanceContext"
 import { _componentPrefix } from "@/index"
 import type { UseClassNameBasicOverload, UseClassNameBooleanish, UseClassNameComplexOverload } from ".."
 
-export function useClassName(options: UseClassNameComplexOverload): string
-export function useClassName(className: UseClassNameBasicOverload): string
-export function useClassName(arg: UseClassNameComplexOverload | UseClassNameBasicOverload): string {
-
-    const { theme, mode, _actualMode, os } = useContext(AppearanceContext)
+export function getClassName(options: UseClassNameComplexOverload): string
+export function getClassName(className: UseClassNameBasicOverload): string
+export function getClassName(arg: UseClassNameComplexOverload | UseClassNameBasicOverload): string {
 
     let base: string | undefined
     let conditions: Record<string, UseClassNameBooleanish> | undefined
@@ -50,13 +48,5 @@ export function useClassName(arg: UseClassNameComplexOverload | UseClassNameBasi
         }
     }
 
-    let _mode = _actualMode ?? mode
-
-    // This case will never happen (I say that half-confidently...).
-    if (_mode === "auto") {
-        console.error("_mode is 'auto'; this should NEVER happen. If it does, something's wrong!")
-        _mode = "light"
-    }
-
-    return `${className} theme-${theme} mode-${_mode} os-${os}`
+    return className
 }

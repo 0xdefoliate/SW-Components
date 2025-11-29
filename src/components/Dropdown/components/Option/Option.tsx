@@ -7,10 +7,10 @@
 
 import { _componentPrefix } from "@/index"
 import { type JSX, useContext, useEffect, useRef, useState } from "react"
-import { useClassName } from "@/internal/hooks/useClassName"
+import { getClassName } from "@/internal/hooks/getClassName"
 import { DropdownContext } from "../../DropdownContext"
 
-import "./Option.scss"
+import "./Option.sass"
 
 export function Option({ text, value, id }: {
     text: string
@@ -55,8 +55,8 @@ export function Option({ text, value, id }: {
     const _selected = isSelected(id ?? "")
 
     const classNames = {
-        option: useClassName("Dropdown-Option"),
-        checkIndicator: useClassName("Dropdown-Option-Check-Indicator"),
+        option: getClassName("Dropdown-Option"),
+        checkIndicator: getClassName("Dropdown-Option-Check-Indicator"),
     }
 
     return (
@@ -75,17 +75,7 @@ export function Option({ text, value, id }: {
             aria-selected={_selected}
             data-value={value}
             tabIndex={-1}>
-            <span className={classNames.checkIndicator} aria-hidden="true">
-                {_selected && (
-                    <svg xmlns="http://www.w3.org/2000/svg"
-                         width="16"
-                         height="16"
-                         fill={`var(--${_componentPrefix}-grey-900)`}
-                         viewBox="0 0 16 16">
-                        <path d="M13.854 3.646a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708 0l-3.5-3.5a.5.5 0 1 1 .708-.708L6.5 10.293l6.646-6.647a.5.5 0 0 1 .708 0" />
-                    </svg>
-                )}
-            </span>
+            <span className={classNames.checkIndicator} aria-hidden="true" data-checked={_selected}></span>
             {text}
         </li>
     )

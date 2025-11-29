@@ -54,5 +54,8 @@
         "typescript-eslint": "8.43.0",
         "user-agent-data-types": "0.4.2",
         "vite": "7.1.11"
+    },
+    "dependencies": {
+        "bootstrap-icons": "1.13.1"
     }
 }

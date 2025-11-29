@@ -1,0 +1,242 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "sass:map"
+@use "sass:list"
+@use "sass:string"
+@use "sass:meta"
+
+@use "shorthand" as *
+
+@use "global"
+@use "state"
+@use "media"
+@use "colour"
+@use "var"
+@use "block"
+
+@mixin component($name, $input: false)
+    @at-root .#{global.$prefix}-#{$name}
+        @content
+
+        @if $input
+            @include base-input-style
+
+
+@mixin extension($source, $new)
+    @at-root .#{global.$prefix}-#{$source}--#{$new}
+        :where(&)
+            @extend .#{global.$prefix}-#{$source}
+
+        @content
+
+
+@mixin base-input-style
+    @at-root :where(&)
+
+        outline: none
+
+        border: 1px solid
+        @include colour.border(grey-400)
+
+        @include colour.foreground(fg)
+        @include appearance(none)
+
+        @include state.disabled
+            cursor: not-allowed
+            filter: global.$filter-argument-on-disabled
+
+
+        @include media.query("theme: aquatic")
+            @include gradient(vertical, colour.get(grey-200), colour.get(grey-100))
+
+            @include media.query("mode: dark")
+
+                @include colour.border(grey-500)
+
+                // Prevent radio buttons' colour from showing as grey-500 when checked.
+                @include state.checked
+                    @include gradient(vertical, colour.get(grey-100), colour.get(grey-200))
+
+            @include state.focus-visible
+                @include colour.border($light: primary-brighter, $dark: primary)
+
+            @include state.hover
+                $shadow-x: 0
+                $shadow-y: 0
+                $shadow-blur: 6px
+
+                @include shadow($shadow-x, $shadow-y, $shadow-blur, 0.2, true)
+
+                @include media.query("mode: dark")
+                    @include shadow($shadow-x, $shadow-y, $shadow-blur, 0.7, true)
+
+
+        @include media.query("theme: flat")
+            @include colour.background(grey-100)
+
+            @include state.hover
+                filter: contrast(0.95)
+
+
+        @include media.query("theme: native")
+            @include state.disabled
+                @include colour.background(grey-100)
+                @include colour.foreground($light: GrayText, $dark: 2)
+
+
+        @include media.query("theme: native and os: Windows")
+            @include colour.background($light: bg, $dark: grey-300)
+            @include colour.border(grey-300)
+
+            border-radius: 4px
+
+            $components: ("Checkbox", "Radio", "ProgressBar", "Slider")
+            $selector: "&:where("
+
+
+            @include state.focus-visible
+                @include colour.border(primary)
+
+            @each $component in $components
+                $selector: "#{$selector}:not(.#{global.$prefix}-#{$component})"
+
+
+            $selector: "#{$selector})"
+
+            #{$selector}
+                border-bottom: 1.5px solid
+                @include colour.border(grey-500, $for: ("bottom"))
+
+                @include state.not-disabled
+                    &:focus, &:focus-visible
+                        @include colour.border(grey-400, $for: ("top", "left", "right"))
+                        @include colour.border(primary, $for: ("bottom"))
+
+                @include state.hover
+                    @include colour.border(grey-400, $for: ("top", "left", "right"))
+
+:root
+    /*
+     * Fonts
+     */
+
+    // NOTE: A fallback font is never assigned here, they are defined in the components' respective CSS.
+
+    @include media.query("theme: aquatic")
+        @include var.set(default-font-family, "\"Lucida Grande\", \"Helvetica Neue\", system-ui")
+
+
+    @include media.query("theme: flat")
+        @include var.set(default-font-family, sans-serif)
+
+
+    @include media.query("theme: native")
+        @include var.set(default-font-family, "-apple-system, \"Segoe UI\", system-ui")
+
+
+    @include var.set(default-font-size, 1rem)
+
+    /*
+     * Colours
+     */
+
+    @include colour.base
+
+    /*
+     * Accessibility
+     */
+
+    @include var.set(transition-duration, 0.2s)
+
+    @media (prefers-reduced-motion: reduce)
+        @include var.set(transition-duration, 0ms)
+
+
+    /*
+     * Other
+     */
+
+    @include var.set(default-border-radius, 6px)
+
+    @include media.query("theme: native and os: macOS")
+        @include var.set(default-border-radius, 2px)
+
+
+    /*
+     * Navbar
+     */
+
+    @include var.set(navbar-height, 10vh)
+    @include var.set(navbar-brand-font-family, system-ui)
+
+    @include var.set(navbar-gradient-start-color, colour.get(grey-100))
+    @include var.set(navbar-gradient-end-color, colour.get(grey-200))
+
+    @include media.query("mode: dark")
+        @include var.set(navbar-gradient-start-color, hsl(0, 0%, 30%))
+        @include var.set(navbar-gradient-end-color, hsl(0, 0%, 20%))
+
+
+:where(*)
+    box-sizing: border-box
+    transition-duration: var.get(transition-duration) !important
+
+    transition-property: box-shadow, filter, border-color
+
+    color-scheme: light
+
+    @include media.query("mode: dark")
+        color-scheme: dark
+
+
+body
+    font-family: var.get(default-font-family), sans-serif
+
+    width: 100dvw
+    height: 100dvh
+
+    margin: 0
+    padding: 0
+
+    @include colour.foreground(fg)
+    @include colour.background($light: bg, $dark: bg-dark-dim)
+
+
+@layer bottom
+    input[class^="#{global.$prefix}"]:focus-visible, .#{global.$prefix}-Dropdown:focus-visible
+        outline: none
+        @include media.query("not theme: native")
+            @include colour.border(primary-brighter)
+
+    label
+        width: max-content
+
+        display: block
+
+        @include user-select(none)
+
+
+    a:not([class])
+        width: max-content
+
+        color: transparent
+
+        background-clip: text
+
+        text-decoration: none
+        text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.25)
+
+        @include gradient(horizontal, colour.get(primary-brighter), colour.get(primary))
+
+        @include state.hover
+            text-decoration: underline
+
+
+    :where(:focus-visible)
+        @include colour.border(primary)
+        @include colour.outline(primary-brighter)

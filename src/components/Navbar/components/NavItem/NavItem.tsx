@@ -7,12 +7,12 @@
 
 import { type JSX, type ReactNode } from "react"
 
-import "./NavItem.scss"
-import { useClassName } from "../../../../internal/hooks/useClassName"
+import "./NavItem.sass"
+import { getClassName } from "../../../../internal/hooks/getClassName"
 
 export function NavItem({ children }: { children: ReactNode }): JSX.Element {
 
-    const className = useClassName("NavItem")
+    const className = getClassName("NavItem")
 
     return (
         <li className={className} role="menuitem">

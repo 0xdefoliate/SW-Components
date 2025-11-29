@@ -7,8 +7,8 @@
 
 import { type JSX, useContext, useId, useRef } from "react"
 
-import "./Radio.scss"
-import { useClassName } from "@/internal/hooks/useClassName"
+import "./Radio.sass"
+import { getClassName } from "@/internal/hooks/getClassName"
 import { RadioContext } from "../../RadioContext"
 
 export interface RadioProps {
@@ -29,8 +29,8 @@ export function Radio({ label, value, disabled, defaultChecked }: RadioProps): J
     const labelId = useId()
 
     const classNames = {
-        radio: useClassName("Radio"),
-        wrapper: useClassName("Radio-Wrapper"),
+        radio: getClassName("Radio"),
+        wrapper: getClassName("Radio-Wrapper"),
     }
 
     return (

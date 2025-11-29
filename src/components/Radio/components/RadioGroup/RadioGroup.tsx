@@ -6,10 +6,10 @@
  */
 
 import { type JSX, type ReactNode } from "react"
-import { useClassName } from "@/internal/hooks/useClassName"
+import { getClassName } from "@/internal/hooks/getClassName"
 import { RadioContext } from "../../RadioContext"
 
-import "./RadioGroup.scss"
+import "./RadioGroup.sass"
 
 export type TRadiosChangeCallback = (arg: { key: string, checked: boolean }) => void
 
@@ -21,7 +21,7 @@ export interface RadioGroupProps {
 
 export function RadioGroup({ name, change, children }: RadioGroupProps): JSX.Element {
 
-    const className = useClassName("RadioGroup")
+    const className = getClassName("RadioGroup")
 
     return (
         <div className={className} role="radiogroup">

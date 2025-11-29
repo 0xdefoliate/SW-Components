@@ -1,0 +1,39 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "global"
+@use "media"
+@use "state"
+
+@include component(NavItem)
+    width: 100%
+    height: 100%
+
+    display: flex
+
+    padding: 0.5rem
+
+    cursor: pointer
+
+    & > .#{global.$prefix}-Button
+        font-size: 1rem
+        padding: 0
+        border-color: transparent
+        background: transparent !important
+
+        @include state.active
+            filter: contrast(10%)
+
+
+    @include state.hover
+        filter: contrast(100%)
+
+    @include user-select(none)

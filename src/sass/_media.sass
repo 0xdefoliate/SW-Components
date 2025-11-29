@@ -1,0 +1,112 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "sass:meta"
+@use "sass:string"
+@use "sass:map"
+@use "sass:list"
+@use "sass:selector"
+
+@mixin query($query)
+    @if meta.type-of($query) != "string"
+        @error "$query must be a string"
+
+
+    $substrings: string.split($query, " ")
+
+    $tokens: ()
+
+    @for $i from 1 through list.length($substrings)
+        $substring: list.nth($substrings, $i)
+
+        @if string.slice($substring, string.length($substring)) == ":"
+            $tokens: list.append($tokens, (type: assertion, key: #{list.nth(string.split($substring, ":"), 1)}, value: list.nth($substrings, $i + 1)))
+            $i: $i + 1
+        @else if $substring == "and" or $substring == "not" or $substring == "or"
+            $tokens: list.append($tokens, (type: operator, value: $substring))
+
+
+    $selector: "body"
+    $root: false
+
+    @if "#{&}" == "body" or "#{&}" == ":root"
+        $selector: "&"
+        $root: true
+
+
+    $selector: "#{$selector}:where("
+
+    $current-and-parent: ""
+
+    $i: 1
+    @each $token in $tokens
+        $token-type: map.get($token, "type")
+
+        $previous-token: null
+
+        @if $i > 1
+            $previous-token: list.nth($tokens, $i - 1)
+
+
+        @if map.get($token, type) == "assertion"
+            $key: map.get($token, key)
+            $value: map.get($token, value)
+
+            @if $previous-token and map.get($previous-token, type) == "operator"
+                $previous-token-value: map.get($previous-token, "value")
+
+                @if $previous-token-value == "and"
+                    $current-and-parent: #{$selector}
+                    $selector: "#{$selector}[data-#{$key}=\"#{$value}\"]"
+                @else if $previous-token-value == "or"
+                    @if not $current-and-parent
+                        $current-and-parent: "&"
+
+                    $selector: "#{$selector}, #{$current-and-parent}[data-#{$key}='#{$value}']"
+                @else if $previous-token-value == "not"
+                    $selector: "#{$selector}:not([data-#{$key}=\"#{$value}\"])"
+
+            @else
+                $selector: "#{$selector}[data-#{$key}=\"#{$value}\"]"
+
+
+        $i: $i + 1
+
+
+    $selector: "#{$selector})"
+
+    // If the caller has an older media query in its selector, extract that media query
+    // and *append* the new media query.
+    $is-nested-media-query: string.index("#{&}", "body:where(") != null
+
+    @if $root
+        @at-root
+            #{$selector}
+                @content
+
+    @else if $is-nested-media-query
+
+        $insert-index: string.index("#{&}", "body:where(") + string.length("body:where(")
+
+        // Get the substring which includes the new "media query" details
+        // without copying body:where(...) because the old selector already
+        // has body:where(...)
+        $tmp: list.nth(string.split($selector, "body:where(", $limit: 1), 2)
+
+        // Remove closing ')' from the now-removed 'body:where('
+        $tmp: string.slice($tmp, 1, -2)
+
+        // Insert the new "media query" CSS selector into
+        // the parent one.
+        $selector: string.insert("#{&}", $tmp, $insert-index)
+
+        @at-root
+            #{$selector}
+                @content
+    @else
+        #{$selector} &
+            @content

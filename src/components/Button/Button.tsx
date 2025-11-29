@@ -6,9 +6,9 @@
  */
 
 import { type JSX, type ReactNode, useRef } from "react"
-import { useClassName } from "@/internal/hooks/useClassName"
+import { getClassName } from "@/internal/hooks/getClassName"
 
-import "./Button.scss"
+import "./Button.sass"
 
 export interface ButtonProps {
     children?: ReactNode
@@ -22,7 +22,7 @@ export function Button({ children, primary, click, disabled, fluid }: ButtonProp
 
     const buttonRef = useRef<HTMLButtonElement>(null)
 
-    const className = useClassName({
+    const className = getClassName({
         base: "Button",
 
         extensions: {

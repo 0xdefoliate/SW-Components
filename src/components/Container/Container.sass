@@ -1,0 +1,28 @@
+/*!
+ * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "@/index.sass" as *
+
+@include component(Container)
+    display: flex
+    flex-wrap: wrap
+
+    gap: 1rem
+
+    box-sizing: border-box
+
+    &.vertical
+        flex-direction: column
+
+        &.centre
+            align-self: center
+
+    &.centre
+        justify-content: center
+
+    &.inline
+        display: inline-flex
