@@ -16,6 +16,3 @@ RUN apt update  -y &&           \
 
 # Switch to the lesser privileged user
 USER node
-
-# Copy the host's gitconfig just in case the IDE doesn't.
-COPY ~/.gitconfig /home/node/.gitconfig
