@@ -1,6 +1,7 @@
 FROM node:24.11.1-trixie-slim
 
-# Update apt and install git for VCS
+# Install `git` for VCS
+# Install `vim` to be able to edit `git commit` messages properly in terminal
 RUN apt update  -y &&           \
     apt upgrade -y &&           \
     apt install -y              \
@@ -8,6 +9,7 @@ RUN apt update  -y &&           \
         build-essential         \
         git                     \
         ssh                     \
+        vim                     \
     &&                          \
     apt autoremove &&           \
     apt clean
