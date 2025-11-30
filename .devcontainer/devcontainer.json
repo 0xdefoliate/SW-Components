@@ -1,7 +1,10 @@
 {
     "name": "SolidWeather Components (DevContainer)",
     "build": {
-        "dockerfile": "Dockerfile"
+        "dockerfile": "Dockerfile",
+        "args": {
+            "HOME": "${localEnv:HOME}"
+        }
     },
     // Allow the `vite` dev server to be accessed from host
     "forwardPorts": ["5173:5173"]
