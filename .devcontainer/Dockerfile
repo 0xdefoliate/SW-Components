@@ -14,8 +14,8 @@ RUN apt update  -y &&           \
     apt autoremove &&           \
     apt clean
 
-# Copy the host's gitconfig just in case the IDE doesn't.
-COPY ~/.gitconfig ~/.gitconfig
-
 # Switch to the lesser privileged user
 USER node
+
+# Copy the host's gitconfig just in case the IDE doesn't.
+COPY ~/.gitconfig ~/.gitconfig
