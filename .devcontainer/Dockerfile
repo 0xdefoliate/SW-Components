@@ -18,4 +18,4 @@ RUN apt update  -y &&           \
 USER node
 
 # Copy the host's gitconfig just in case the IDE doesn't.
-# COPY ~/.gitconfig ~/.gitconfig
+COPY ~/.gitconfig /home/node/.gitconfig
