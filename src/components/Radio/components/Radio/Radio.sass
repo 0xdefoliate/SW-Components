@@ -25,8 +25,7 @@
 
 
 @include component(Radio, $input: true)
-    width: 1.2rem
-    height: 1.2rem
+    @include size(1.2rem)
 
     position: relative
 
@@ -37,15 +36,13 @@
     border-radius: 100%
 
     @include state.checked
-        border: 5px solid
-        @include colour.border(primary-brighter)
+        @include border(4.5px, $radius: 100%)
 
-
-    @include media.query("theme: native and os: Windows")
-        @include state.checked
-            border-width: 4.5px
+        &:is(&, :is(:focus, :focus-visible))
             @include colour.border(primary)
 
+    &:is(:focus, :focus-visible)
+        @include colour.border(grey-400)
 
     @include state.disabled($also: "+ label")
         cursor: not-allowed

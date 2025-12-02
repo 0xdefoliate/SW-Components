@@ -43,45 +43,23 @@
 
         @include appearance(none)
 
+        @include colour.background(transparent)
 
-    @include media.query("theme: aquatic")
-        @include _slider-thumb
-            @include colour.background(transparent)
+        @include blur(2px)
 
-            @include blur(2px)
+        @include state.hover
+            @include blur(3px)
 
-            @include state.hover
-                @include blur(3px)
-
-            @include var.set(gradient-start-colour, hsla(0, 0%, 95%, 0.4))
-            @include var.set(gradient-end-colour, hsla(0, 0%, 85%, 0.4))
-
-            @include media.query("mode: dark")
-                @include var.set(gradient-start-colour, hsla(0, 0%, 75%, 0.4))
-                @include var.set(gradient-end-colour, hsla(0, 0%, 45%, 0.4))
-
-            @include gradient(vertical, var.get(gradient-start-colour), var.get(gradient-end-colour))
-
-            @include shadow($blur: 8px, $alpha: 0.3)
-
-
-    @include media.query("theme: flat")
-        @include _slider-thumb
-            @include colour.background(bg)
-            @include shadow(0, 0, $blur: 2px)
+        @include var.set(gradient-start-colour, hsla(0, 0%, 95%, 0.4))
+        @include var.set(gradient-end-colour, hsla(0, 0%, 85%, 0.4))
 
         @include media.query("mode: dark")
-            @include _slider-thumb
-                @include colour.background(grey-300)
+            @include var.set(gradient-start-colour, hsla(0, 0%, 75%, 0.4))
+            @include var.set(gradient-end-colour, hsla(0, 0%, 45%, 0.4))
 
+        @include gradient(vertical, var.get(gradient-start-colour), var.get(gradient-end-colour))
 
-    @include media.query("theme: native and os: Windows")
-        height: 12px
-
-        @include _slider-thumb
-            border-radius: 4px
-            @include colour.background(hsla(0deg, 0%, 80%, 0.0))
-            @include blur(1px)
+        @include shadow($blur: 8px, $alpha: 0.3)
 
 
 @include component(Slider-Label)

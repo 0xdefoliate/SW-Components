@@ -6,6 +6,10 @@
  */
 
 @use "sass:meta"
+@use "sass:list"
+
+@use "colour"
+@use "var"
 
 
 @mixin _inject-css-property($property, $property-value, $reset, $important)
@@ -72,3 +76,8 @@
 @mixin appearance($value)
     -webkit-appearance: $value
     appearance: $value
+
+
+@mixin border($width: 1.4px, $colour: colour.get(grey-400), $radius: var.get(default-border-radius))
+    border: #{$width} solid #{$colour}
+    border-radius: #{$radius}

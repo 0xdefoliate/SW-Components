@@ -61,7 +61,7 @@ export function Checkbox({ label, checked, change, disabled }: CheckboxProps): J
                  role="checkbox"
                  onClick={handleChange}
                  onKeyDown={e => {
-                     if (e.key === "Enter") {
+                     if (e.key === " ") {
                          handleChange()
                      }
                  }}

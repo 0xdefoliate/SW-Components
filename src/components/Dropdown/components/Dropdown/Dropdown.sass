@@ -14,6 +14,22 @@
 @use "icon"
 @use "colour"
 @use "var"
+@use "global"
+
+@keyframes rotate-chevron
+    from
+        transform: rotate(0)
+
+    to
+        transform: rotate(180deg)
+
+@keyframes rotate-chevron-reverse
+    from
+        transform: rotate(180deg)
+
+    to
+        transform: rotate(0)
+
 
 @include component(Dropdown)
     width: 100%
@@ -26,6 +42,11 @@
     box-sizing: content-box
 
     @include user-select(none)
+
+    @include var.set(animation-duration, 0.2s)
+
+    @media (prefers-reduced-motion: reduce)
+        @include var.set(animation-duration, 0ms)
 
 
 @include component(Dropdown-Button, $input: true)
@@ -49,18 +70,21 @@
         overflow: hidden
 
     & > .chevron-icon
+
+        &.show::after
+            animation: var.get(animation-duration) ease-in-out forwards rotate-chevron
+
+        &.hidden::after
+            animation: var.get(animation-duration) ease-in-out forwards rotate-chevron-reverse
+
         &::after
             // Add a sprinkle of margin above the icon to compensate for
             // the icon looking a bit off-centre.
             margin-top: 2px
 
-            width: 16px
-            height: 16px
+            @include size(16px)
 
-            @include icon.use("caret-down-fill")
-
-            @include media.query("theme: native and os: Windows")
-                @include icon.use("chevron-down")
+            @include icon.use("chevron-down")
 
 
         height: 100%
@@ -95,29 +119,17 @@
     list-style: none
 
     border: 1px solid
-    @include colour.border(grey-400)
 
-    @include media.query("theme: aquatic")
-        @include var.set(gradient-start-colour, hsla(0, 0%, 95%, 0.8))
-        @include var.set(gradient-end-colour, hsla(0, 0%, 85%, 0.7))
+    @include border()
 
-        @include media.query("mode: dark")
-            @include var.set(gradient-start-colour, hsla(0, 0%, 15%, 0.8))
-            @include var.set(gradient-end-colour, hsla(0, 0%, 25%, 0.7))
+    @include blur(10px)
 
+    border-radius: var.get(default-border-radius)
 
-        @include blur(10px)
-        @include gradient(vertical, var.get(gradient-start-colour), var.get(gradient-end-colour))
+    @include colour.background($light: bg, $dark: grey-200)
+    @include colour.border($light: bg, $dark: grey-200)
 
+    @include shadow(0, 1px, 12px, 0.5)
 
-    @include media.query("theme: flat")
-        @include colour.background(grey-100)
-
-
-    @include media.query("theme: native and os: Windows")
-        border-radius: var.get(default-border-radius)
-
-        @include colour.background($light: bg, $dark: grey-200)
-        @include colour.border($light: bg, $dark: grey-200)
-
-    @include shadow(0, 0, 8px, 0.3)
+    &.hidden
+        display: none

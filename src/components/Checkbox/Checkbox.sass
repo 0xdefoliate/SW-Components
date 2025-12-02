@@ -36,23 +36,14 @@
 
 
     @include state.checked
-        border-color: colour.get(grey-700)
+        @include colour.background(primary)
 
-        @include media.query("theme: aquatic")
-            @include gradient(20deg, colour.get(primary), colour.get(primary-brighter))
-
-
-        @include media.query("theme: flat")
-            @include colour.background(primary)
-
-
-        @include media.query("theme: native and os: Windows")
-            @include colour.background(primary)
+        &:is(&, &:is(:focus, :focus-visible))
             @include colour.border(primary)
 
 
-    @include media.query("theme: native and os: Windows")
-        border-radius: var.get(default-border-radius)
+    &:is(:focus, :focus-visible)
+        @include colour.border(primary)
 
 
 @include component(Checkbox-Checkmark)
@@ -65,13 +56,6 @@
     @include colour.foreground(white)
 
     &::after
-        scale: 1.2
-
-        // Offset the icon just a bit...
-        margin-top: 2px
-        @include icon.use("check2")
-
-        @include media.query("theme: native and os: Windows")
-            @include icon.use("check-lg")
-            margin-top: 1px
-            scale: 1.05
+        @include icon.use("check-lg")
+        margin-top: 1px
+        scale: 1.05

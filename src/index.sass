@@ -34,91 +34,36 @@
 
         @content
 
+@mixin base-input-style-focus
+    @include colour.border(grey-400, $for: ("top", "left", "right"))
+    @include colour.border(primary, $for: ("bottom"))
+
+    @include shadow(0, 0, $blur: 2px, $inset: true)
 
 @mixin base-input-style
     @at-root :where(&)
 
         outline: none
 
-        border: 1px solid
-        @include colour.border(grey-400)
+        @include colour.background($light: bg, $dark: grey-200)
+        @include border()
 
         @include colour.foreground(fg)
         @include appearance(none)
+
+        @include shadow(0, 0, $blur: 1.8px)
 
         @include state.disabled
             cursor: not-allowed
             filter: global.$filter-argument-on-disabled
 
-
-        @include media.query("theme: aquatic")
-            @include gradient(vertical, colour.get(grey-200), colour.get(grey-100))
-
-            @include media.query("mode: dark")
-
-                @include colour.border(grey-500)
-
-                // Prevent radio buttons' colour from showing as grey-500 when checked.
-                @include state.checked
-                    @include gradient(vertical, colour.get(grey-100), colour.get(grey-200))
-
-            @include state.focus-visible
-                @include colour.border($light: primary-brighter, $dark: primary)
-
-            @include state.hover
-                $shadow-x: 0
-                $shadow-y: 0
-                $shadow-blur: 6px
-
-                @include shadow($shadow-x, $shadow-y, $shadow-blur, 0.2, true)
-
-                @include media.query("mode: dark")
-                    @include shadow($shadow-x, $shadow-y, $shadow-blur, 0.7, true)
-
-
-        @include media.query("theme: flat")
             @include colour.background(grey-100)
-
-            @include state.hover
-                filter: contrast(0.95)
+            @include colour.foreground($light: GrayText, $dark: grey-600)
 
 
-        @include media.query("theme: native")
-            @include state.disabled
-                @include colour.background(grey-100)
-                @include colour.foreground($light: GrayText, $dark: 2)
-
-
-        @include media.query("theme: native and os: Windows")
-            @include colour.background($light: bg, $dark: grey-300)
-            @include colour.border(grey-300)
-
-            border-radius: 4px
-
-            $components: ("Checkbox", "Radio", "ProgressBar", "Slider")
-            $selector: "&:where("
-
-
-            @include state.focus-visible
-                @include colour.border(primary)
-
-            @each $component in $components
-                $selector: "#{$selector}:not(.#{global.$prefix}-#{$component})"
-
-
-            $selector: "#{$selector})"
-
-            #{$selector}
-                border-bottom: 1.5px solid
-                @include colour.border(grey-500, $for: ("bottom"))
-
-                @include state.not-disabled
-                    &:focus, &:focus-visible
-                        @include colour.border(grey-400, $for: ("top", "left", "right"))
-                        @include colour.border(primary, $for: ("bottom"))
-
-                @include state.hover
-                    @include colour.border(grey-400, $for: ("top", "left", "right"))
+        @include state.any-focus
+            @include state.not-disabled
+                @include base-input-style-focus
 
 :root
     /*
@@ -127,16 +72,8 @@
 
     // NOTE: A fallback font is never assigned here, they are defined in the components' respective CSS.
 
-    @include media.query("theme: aquatic")
-        @include var.set(default-font-family, "\"Lucida Grande\", \"Helvetica Neue\", system-ui")
 
-
-    @include media.query("theme: flat")
-        @include var.set(default-font-family, sans-serif)
-
-
-    @include media.query("theme: native")
-        @include var.set(default-font-family, "-apple-system, \"Segoe UI\", system-ui")
+    @include var.set(default-font-family, "-apple-system, \"Segoe UI\", system-ui")
 
 
     @include var.set(default-font-size, 1rem)
@@ -161,7 +98,7 @@
      * Other
      */
 
-    @include var.set(default-border-radius, 6px)
+    @include var.set(default-border-radius, 4px)
 
     @include media.query("theme: native and os: macOS")
         @include var.set(default-border-radius, 2px)
@@ -210,8 +147,7 @@ body
 @layer bottom
     input[class^="#{global.$prefix}"]:focus-visible, .#{global.$prefix}-Dropdown:focus-visible
         outline: none
-        @include media.query("not theme: native")
-            @include colour.border(primary-brighter)
+        @include colour.border(primary-brighter)
 
     label
         width: max-content

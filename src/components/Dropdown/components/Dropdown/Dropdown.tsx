@@ -51,8 +51,6 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
         setActive(false)
     })
 
-    const { theme, os } = useContext(AppearanceContext);
-
     const childIDs = useChildIDs(children)
 
     const labelID = useId()
@@ -77,7 +75,7 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
         }
 
         setActive(false)
-        dropdownRef.current?.focus()
+        dropdownButtonRef.current?.focus()
 
         // Section for the user-defined `change` callback. We're putting it at the bottom because
         // we don't want it to be called when an option is selected by default.
@@ -106,10 +104,9 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
                     setActive(false)
                     dropdownButtonRef.current?.focus()
                     return
-                case "Tab": {
+                case "Tab":
                     preventDefault()
                     return
-                }
                 case "ArrowUp":
                 case "ArrowDown":
                     break
@@ -205,8 +202,18 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
 
     const classNames = {
         dropdown: getClassName("Dropdown"),
-        button: getClassName("Dropdown-Button"),
-        options: getClassName("Dropdown-Options")
+        button: getClassName({
+            base: "Dropdown-Button",
+            appendConditionally: {
+                "__FOCUS__": active
+            }
+        }),
+        options: getClassName({
+            base: "Dropdown-Options",
+            appendConditionally: {
+                "hidden": !active
+            }
+        })
     }
 
     return (
@@ -221,15 +228,15 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
 
             <div className={classNames.dropdown}
                  id={dropdownID}
-                 role="listbox"
                  aria-roledescription="Dropdown"
-                 aria-activedescendant={selectedOption?.id}
                  aria-labelledby={labelID}
                  aria-disabled={disabled}
-                 ref={dropdownRef}
-                // The dropdown should not be tabbable if it's disabled
-                 tabIndex={disabled ? undefined : 0}
                  onKeyDown={e => {
+                     // **IMPORTANT**
+                     // This event handler must be placed in the wrapper, and not the button.
+                     // Why? Because otherwise the events which actually occurs in the listbox
+                     // won't get caught when bubbling up. Thus, nothing seems to happen.
+
                      if (disabled) {
                          return
                      }
@@ -237,14 +244,19 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
                      handleKeyDown(e.key, () => {
                          e.preventDefault()
                      })
-                 }}>
+                 }}
+                 ref={dropdownRef}>
 
                 <div ref={dropdownButtonRef}
                      className={classNames.button}
                      role="button"
                      aria-label="Toggle Dropdown"
                      aria-disabled={disabled}
-                     tabIndex={-1}
+                     aria-activedescendant={active ? selectedOption?.id : undefined}
+                     aria-expanded={active}
+                     aria-haspopup="listbox"
+                    // The dropdown should not be tabbable if it's disabled
+                     tabIndex={disabled ? undefined : 0}
                      onClick={() => {
                          if (!disabled) {
                              setActive(!active)
@@ -253,11 +265,11 @@ export function Dropdown({ label, change, children, chosen, disabled }: Dropdown
 
                     <span className="text" ref={dropdownPreviewRef}></span>
 
-                    <span className="chevron-icon" aria-hidden="true"></span>
+                    <span className={`chevron-icon ${active ? "show" : "hidden"}`} aria-hidden="true"></span>
                 </div>
 
                 <ul className={classNames.options}
-                    {...(!active && { style: { display: "none" } })}
+                    role="listbox"
                     ref={dropdownOptionsRef}>
                     <DropdownContext value={{
                         handleOptionSelected,

@@ -9,7 +9,7 @@
 @use "sass:selector"
 
 @mixin not-disabled($also: null)
-    &:not(:disabled):not(.disabled):not([aria-disabled="true"]) #{$also}
+    &:where(:not(:disabled):not(.disabled):not([aria-disabled="true"]) #{$also})
         @content
 
 @mixin disabled($also: "")
@@ -67,4 +67,12 @@
 
 @mixin focus
     &:where(:focus)
+        @content
+
+@mixin not-any-focus
+    &:where(:not(:focus, :focus-visible, .__FOCUS__))
+        @content
+
+@mixin any-focus
+    &:where(:focus, :focus-visible, .__FOCUS__)
         @content

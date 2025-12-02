@@ -6,6 +6,8 @@
  */
 
 import "./App.scss"
+import { NavButton } from "@/components/Navbar/components/NavButton/NavButton"
+import { Switch } from "@/components/Switch/Switch"
 import { type JSX, useContext, useState } from "react"
 import { AppearanceContext } from "../components/Appearance/AppearanceContext"
 import type { AppearanceMode, AppearanceTheme } from "../components/Appearance/types"
@@ -32,18 +34,20 @@ export function App(): JSX.Element {
 
     const { theme, mode, setTheme, setMode } = useContext(AppearanceContext)
 
+    const [showIndeterminate, setShowIndeterminate] = useState<boolean>(false)
+
     return (
         <>
             <Navbar brand="Brand:https://example.com">
                 <NavItem>
-                    <Button>
+                    <NavButton>
                         Item 1
-                    </Button>
+                    </NavButton>
                 </NavItem>
                 <NavItem>
-                    <Button>
+                    <NavButton>
                         Item 2
-                    </Button>
+                    </NavButton>
                 </NavItem>
             </Navbar>
 
@@ -99,6 +103,11 @@ export function App(): JSX.Element {
                                 <Checkbox label="Disabled" disabled />
                             </Container>
 
+                            <Container>
+                                <Switch label="Switch" />
+                                <Switch label="Disabled" disabled />
+                            </Container>
+
                             <Container paddingTop={12}>
                                 Static (non-fluid) buttons
                                 <Button>
@@ -110,13 +119,19 @@ export function App(): JSX.Element {
 
                     <Container width={300}>
                         <Group legend="Sliders">
-                            <Slider label="Progress: $progress/$max"
+                            <Slider label={`Progress: ${sliderValue}%`}
                                     range={[ 0, 100 ]}
                                     value={sliderValue}
                                     change={newValue => { setSliderValue(newValue) }} />
-                            <Slider label="Progress: $progress/$max" range={[ 1, 2 ]} />
+
+                            <Slider label="Range: 5-10" range={[ 5, 10 ]} />
 
                             <ProgressBar progress={sliderValue} />
+
+                            <Checkbox label="Indeterminate" change={newValue => {
+                                setShowIndeterminate(newValue)}
+                            } />
+                            <ProgressBar indeterminate={showIndeterminate} />
 
                             <Slider label="This slider is disabled" range={[ 0, 10 ]} disabled />
                         </Group>

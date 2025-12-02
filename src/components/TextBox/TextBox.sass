@@ -26,12 +26,3 @@
     padding: 6px 4px
 
     outline: none
-
-    @include media.query("theme: aquatic")
-        @include colour.border(grey-200)
-
-        @include state.not-hover
-            @include shadow(0, 0, 2px, 0.4, true)
-
-        @include state.focus
-            @include colour.border(primary-brighter)

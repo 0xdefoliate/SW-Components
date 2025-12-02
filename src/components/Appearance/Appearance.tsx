@@ -7,23 +7,19 @@
 
 import { type JSX, type ReactNode, useContext, useEffect, useRef, useState } from "react"
 import { AppearanceContext } from "./AppearanceContext"
-import { getOS } from "./helpers/getOS"
-import type { AppearanceMode, AppearanceOS, AppearanceTheme } from "./types"
+import type { AppearanceMode, AppearanceTheme } from "./types"
 
 export interface AppearanceProps {
     children: ReactNode
     options?: {
         theme?: AppearanceTheme
-        mode?: AppearanceMode,
-        os?: AppearanceOS
+        mode?: AppearanceMode
     }
 }
 
 export function Appearance({ children, options }: AppearanceProps): JSX.Element {
 
     const isDarkMediaQueryRef = useRef(matchMedia("(prefers-color-scheme: dark)"))
-
-    const osRef = useRef<AppearanceOS>(options?.os ?? getOS())
 
     const context = useContext(AppearanceContext)
 
@@ -39,7 +35,7 @@ export function Appearance({ children, options }: AppearanceProps): JSX.Element 
     )
 
     useEffect(() => {
-        for (const [key, value] of Object.entries({ theme, os: osRef.current ?? "Web", mode: internalMode })) {
+        for (const [key, value] of Object.entries({ theme, mode: internalMode })) {
             document.body.dataset[key as string] = value as string
             document.documentElement.dataset[key as string] = value as string
         }
@@ -78,7 +74,7 @@ export function Appearance({ children, options }: AppearanceProps): JSX.Element 
     }, [ mode ])
 
     return (
-        <AppearanceContext value={{ theme, mode, setTheme, setMode, _actualMode: internalMode, os: osRef.current ?? "Web" }}>
+        <AppearanceContext value={{ theme, mode, setTheme, setMode, _actualMode: internalMode }}>
             {children}
         </AppearanceContext>
     )

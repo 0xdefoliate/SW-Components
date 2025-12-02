@@ -6,61 +6,51 @@
  */
 
 import "./ProgressBar.sass"
-import { type JSX, useEffect, useRef } from "react"
-import { getClassName } from "../../internal/hooks/getClassName"
+import { type JSX, useRef } from "react"
+import { getClassName } from "@/internal/hooks/getClassName"
 
-export function ProgressBar({ progress }: { progress: number }): JSX.Element {
+export function ProgressBar({ progress, indeterminate }: { progress?: number, indeterminate?: boolean }): JSX.Element {
 
     const progressTrackRef = useRef<HTMLSpanElement>(null)
 
-    // Prevent overflow of the progress bar.
-    const _progress = progress > 100 ? 100 : progress
+    // Prevent overflow of the progress bar and other issues.
+    let _progress: number = progress ?? 0
 
-    // TODO: Remove this redundant effect
-    useEffect(() => {
-        if (!progressTrackRef.current) {
-            return
+    if (_progress > 100) {
+        _progress = 100
+    } else if (_progress < 0) {
+        _progress = 0
+    }
+
+    const className = getClassName({
+        base: "ProgressBar",
+        appendConditionally: {
+            indeterminate
         }
+    })
 
-        type ProgressState = "nearly-empty" | "nearly-full" | "full" | "reset" | "one-percent"
-
-        const setProgressState = (state: ProgressState): void => {
-
-            if (!progressTrackRef.current) {
-                return
-            }
-
-            const classNames: Array<ProgressState> = [ "one-percent", "nearly-empty", "nearly-full", "full", "one-percent" ]
-
-            progressTrackRef.current.classList.remove(...classNames)
-
-            if (state !== "reset") {
-                progressTrackRef.current.classList.add(state)
-            }
-        }
-
-        if (_progress > 3 && _progress < 98.25) {
-            setProgressState("reset")
-        }
-
-        if (_progress === 100) {
-            setProgressState("full")
-        } else if (_progress >= 98.25) {
-            setProgressState("nearly-full")
-        } else if (_progress > 1 && _progress <= 3) {
-            setProgressState("nearly-empty")
-        } else if (_progress <= 1 && _progress > 0) {
-            setProgressState("one-percent")
-        } else {
-            setProgressState("reset")
-        }
-    }, [ _progress ])
-
-    const className = getClassName("ProgressBar")
+    // Progress is always a percentage, so just divide it by 100.
+    const progressDecimal = _progress / 100
 
     return (
-        <div className={className} title={`Progress: ${_progress}%`}>
-            <span className="progress" ref={progressTrackRef} style={{ width: `${_progress}%` }}></span>
+        <div className={className}
+             title={indeterminate ? "" : `Progress: ${_progress}%`}
+             role="progressbar"
+             aria-valuemin={0}
+             aria-valuemax={1}
+             aria-valuenow={progressDecimal}>
+            <span className="progress" ref={progressTrackRef} style={{ width: `${_progress}%` }}>
+                <div className="label-wrapper">
+                <span className="label">
+                    {!indeterminate && (
+                        <>
+                            {_progress}%
+                        </>
+                    )}
+
+                </span>
+            </div>
+            </span>
         </div>
     )
 }
