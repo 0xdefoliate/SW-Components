@@ -18,6 +18,7 @@ dist-ssr
 .idea/*
 !.idea/codeStyles
 !.idea/copyright
+!.idea/dictionaries
 # The `webResources` file stores the "marked as resource" directory,
 # making sure no false errors occurs due to statements like @use "foo",
 # which is short-hand for @use "src/sass/foo.sass" in Sass files.

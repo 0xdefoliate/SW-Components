@@ -30,6 +30,12 @@
     to
         transform: rotate(0)
 
+@keyframes dropdown-options-show
+    from
+        opacity: 0
+
+    to
+        opacity: 1
 
 @include component(Dropdown)
     width: 100%
@@ -130,6 +136,8 @@
     @include colour.border($light: bg, $dark: grey-200)
 
     @include shadow(0, 1px, 12px, 0.5)
+
+    animation: var.get(animation-duration) ease-in-out dropdown-options-show
 
     &.hidden
         display: none
