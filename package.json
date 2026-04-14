@@ -2,7 +2,7 @@
     "name": "@solidweather/components",
     "version": "0.4.2",
     "author": {
-        "name": "Axel \"Foley\" Karlsson",
+        "name": "Axel H. Karlsson",
         "url": "https://axelkarlsson.se"
     },
     "description": "A simple and tiny React UI toolkit, mainly used for SolidWeather.",
