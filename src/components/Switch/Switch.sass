@@ -1,0 +1,92 @@
+/*!
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "sass:math"
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "colour"
+@use "state"
+@use "var"
+
+$_switch-width: 3.2rem
+$_switch-pill-width: math.div($_switch-width, 2.5)
+
+@keyframes animate-pill-ltr
+    from
+        left: 0
+
+    to
+        left: calc(100% - $_switch-pill-width)
+
+@keyframes animate-pill-rtl
+    from
+        left: calc(100% - $_switch-pill-width)
+
+    to
+        left: 0
+
+
+@include component("Switch", $input: true)
+    width: $_switch-width
+    height: 1.4rem
+
+    position: relative
+
+    $radius: calc(var.get(default-border-radius) * 2)
+
+    @include border($radius: $_switch-width)
+    @include colour.border(grey-300)
+
+    @include colour.background(grey-100)
+
+    transition-property: background-color, box-shadow, border-color
+    transition-duration: var.get(transition-duration)
+
+    @include state.focus-visible
+        @include colour.border(primary)
+
+        @include state.checked
+            outline: 1px solid
+            @include colour.border(grey-200)
+            @include colour.outline(fg)
+
+    @include state.not-disabled
+        cursor: pointer
+
+    @include state.checked
+        @include colour.background(primary)
+
+        @include state.not-focus-visible
+            @include colour.border(primary)
+
+        & > .pill
+            animation: var.get(transition-duration) ease-in-out forwards animate-pill-ltr
+            @include colour.background(white)
+            @include colour.border(white)
+
+    & > .pill
+        position: absolute
+        width: $_switch-pill-width
+        height: 100%
+
+        transition-property: background-color, box-shadow, border-color
+
+        @include colour.background($light: bg, $dark: grey-400)
+
+        @include border($radius: 100%)
+
+        animation: var.get(transition-duration) ease-in-out forwards animate-pill-rtl
+
+    @include state.not-disabled
+        & > .pill
+            @include shadow(0, 0, 1px, $inset: true)
+
+            @include state.hover
+                @include shadow(0, 0, $blur: 4px, $inset: true)

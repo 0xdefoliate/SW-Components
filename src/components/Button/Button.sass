@@ -1,0 +1,88 @@
+/*!
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "global"
+@use "state"
+@use "media"
+@use "colour"
+@use "icon"
+@use "var"
+@use "block"
+
+@mixin _button-border($colour, $border-radius: var.get(default-border-radius))
+    @include border($colour: $colour, $radius: $border-radius)
+
+    outline: none
+
+
+@include component(Button)
+    width: max-content
+
+    padding: 10px 8px
+
+    @include colour.background($light: bg, $dark: grey-300)
+    @include colour.foreground($light: ButtonText, $dark: grey-900)
+
+    @include state.disabled
+        @include colour.background(grey-100)
+        @include colour.foreground($light: GrayText, $dark: grey-500)
+
+        cursor: not-allowed
+        filter: global.$filter-argument-on-disabled
+
+        @include shadow($reset: true)
+
+    font-family: var.get(default-font-family), sans-serif
+    font-size: 1rem
+
+    display: flex
+    align-items: center
+
+    cursor: pointer
+    transition-property: background-color, box-shadow, border-color, filter, background
+
+    @include user-select(none)
+
+    &.fluid
+        justify-content: center
+        width: 100%
+
+    @include _button-border(colour.get(grey-300))
+    @include shadow(1px, 2px, $blur: 2px, $alpha: 0.1)
+
+    @include state.hover
+        filter: contrast(0.95)
+        @include shadow(1px, 2px, $blur: 8px, $alpha: 0.15)
+
+    @include state.active
+        filter: contrast(0.65)
+
+    @include state.focus-visible
+        @include _button-border(colour.get(primary))
+
+
+@include extension($source: Button, $new: primary)
+
+    @include colour.background(primary)
+    @include colour.foreground(white)
+    @include colour.border(primary)
+
+    transition-property: background-color
+
+    @include state.active
+        filter: none
+        @include colour.background($light: primary-darker, $dark: rgb(0, 156, 255))
+
+    @include state.focus-visible
+        @include shadow(0, 0, $important: true)
+        outline: 1px solid
+        @include colour.border(white)
+        @include colour.outline(black)

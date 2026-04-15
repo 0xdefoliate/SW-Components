@@ -1,0 +1,49 @@
+/*!
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "global"
+@use "media"
+@use "state"
+@use "colour"
+@use "var"
+
+@include component(Radio-Wrapper)
+    width: max-content
+
+    display: inline flex
+    align-items: center
+
+    gap: 4px
+
+
+@include component(Radio, $input: true)
+    @include size(1.2rem)
+
+    position: relative
+
+    margin: 0
+
+    transition-property: filter, border, box-shadow
+
+    border-radius: 100%
+
+    @include state.checked
+        @include border(4.5px, $radius: 100%)
+
+        &:is(&, :is(:focus, :focus-visible))
+            @include colour.border(primary)
+
+    &:is(:focus, :focus-visible)
+        @include colour.border(grey-400)
+
+    @include state.disabled($also: "+ label")
+        cursor: not-allowed
+        filter: global.$filter-argument-on-disabled

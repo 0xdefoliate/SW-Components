@@ -1,27 +1,34 @@
 /*
- * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
  *
  * Use of this source code is governed by the MIT License, which you may
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import type { ReactNode } from "react"
+import type { JSX, ReactNode } from "react"
 
-import "./Group.scss"
+import "./Group.sass"
+import { getClassName } from "../../internal/hooks/getClassName"
 
 export interface GroupProps {
     legend: string
     children: ReactNode
 }
 
-export function Group({ legend, children }: GroupProps) {
+export function Group({ legend, children }: GroupProps): JSX.Element {
+
+    const classNames = {
+        group: getClassName("Group"),
+        wrapper: getClassName("Group-Container"),
+    }
+
     return (
-        <fieldset className="X-Group">
+        <fieldset className={classNames.group}>
             <legend>
                 {legend}
             </legend>
 
-            <div className="X-Group-Container">
+            <div className={classNames.wrapper}>
                 {children}
             </div>
         </fieldset>

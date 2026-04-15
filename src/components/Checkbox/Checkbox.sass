@@ -1,0 +1,61 @@
+/*!
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "global"
+@use "media"
+@use "state"
+@use "icon"
+@use "colour"
+@use "var"
+
+@include component(Checkbox-Wrapper)
+    display: flex
+    align-items: center
+    gap: 4px
+
+
+@include component(Checkbox, $input: true)
+    @include size(1.4rem)
+
+    box-sizing: content-box
+
+    @include state.disabled
+        cursor: not-allowed
+        filter: global.$filter-argument-on-disabled
+
+        + label
+            cursor: not-allowed
+
+
+    @include state.checked
+        @include colour.background(primary)
+
+        &:is(&, &:is(:focus, :focus-visible))
+            @include colour.border(primary)
+
+
+    &:is(:focus, :focus-visible)
+        @include colour.border(primary)
+
+
+@include component(Checkbox-Checkmark)
+    @include size(100%)
+
+    display: flex
+    align-items: center
+    justify-content: center
+
+    @include colour.foreground(white)
+
+    &::after
+        @include icon.use("check-lg")
+        margin-top: 1px
+        scale: 1.05

@@ -1,33 +1,37 @@
 /*
- * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
  *
  * Use of this source code is governed by the MIT License, which you may
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
+import { type JSX, useState } from "react"
+import { getClassName } from "../../internal/hooks/getClassName"
+import type { FormControlProps } from "../types"
 
-import { useState } from "react"
-import type { FormControlProps } from "../../index.js"
+import "./TextBox.sass"
 
-import "./TextBox.scss"
-
-export interface TextBoxProps extends FormControlProps<HTMLInputElement, string, string> {
+export interface TextBoxProps extends FormControlProps<string, string> {
     placeholder?: string
     subType?: "email" | "search" | "password" | "tel" | "url"
 }
 
-export function TextBox({ label, value, change, disabled, placeholder, subType }: TextBoxProps) {
+export function TextBox({ label, value, change, disabled, placeholder, subType }: TextBoxProps): JSX.Element {
 
     // This state is only used if no `value` is provided.
     const [ internalValue, setInternalValue ] = useState<string>("")
 
+    const classNames = {
+        wrapper: getClassName("TextInput-Wrapper"),
+        textBox: getClassName("TextInput")
+    }
+
     return (
-        <label className="X-TextInput-Wrapper">
+        <label className={classNames.wrapper}>
             <div>
                 {label}
             </div>
-            <input className="X-TextInput"
+            <input className={classNames.textBox}
                    type={subType ?? "text"}
                    value={value ?? internalValue}
                    disabled={disabled}

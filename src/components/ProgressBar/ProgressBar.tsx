@@ -1,57 +1,56 @@
 /*
- * Copyright (c) 2025 Axel "Foley" Karlsson and contributors.
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
  *
  * Use of this source code is governed by the MIT License, which you may
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-"use strict"
+import "./ProgressBar.sass"
+import { type JSX, useRef } from "react"
+import { getClassName } from "@/internal/hooks/getClassName"
 
-import "./ProgressBar.scss"
-import { useEffect, useRef } from "react"
-
-export function ProgressBar({ progress }: { progress: number }) {
+export function ProgressBar({ progress, indeterminate }: { progress?: number, indeterminate?: boolean }): JSX.Element {
 
     const progressTrackRef = useRef<HTMLSpanElement>(null)
 
-    // Prevent overflow of the progress bar.
-    const _progress = progress > 100 ? 100 : progress
+    // Prevent overflow of the progress bar and other issues.
+    let _progress: number = progress ?? 0
 
-    useEffect(() => {
-        if (!progressTrackRef.current) return
+    if (_progress > 100) {
+        _progress = 100
+    } else if (_progress < 0) {
+        _progress = 0
+    }
 
-        type ProgressState = "nearly-empty" | "nearly-full" | "full" | "reset" | "one-percent"
-
-        const setProgressState = (state: ProgressState) => {
-            const classNames: ProgressState[] = [ "one-percent", "nearly-empty", "nearly-full", "full", "one-percent" ]
-
-            progressTrackRef.current!.classList.remove(...classNames)
-
-            if (state !== "reset") {
-                progressTrackRef.current!.classList.add(state)
-            }
+    const className = getClassName({
+        base: "ProgressBar",
+        appendConditionally: {
+            indeterminate
         }
+    })
 
-        if (_progress > 3 && _progress < 98.25) {
-            setProgressState("reset")
-        }
-
-        if (_progress === 100) {
-            setProgressState("full")
-        } else if (_progress >= 98.25) {
-            setProgressState("nearly-full")
-        } else if (_progress > 1 && _progress <= 3) {
-            setProgressState("nearly-empty")
-        } else if (_progress <= 1 && _progress > 0) {
-            setProgressState("one-percent")
-        } else {
-            setProgressState("reset")
-        }
-    }, [ _progress ])
+    // Progress is always a percentage, so just divide it by 100.
+    const progressDecimal = _progress / 100
 
     return (
-        <div className="X-ProgressBar" title={`Progress: ${_progress}%`}>
-            <span className="progress" ref={progressTrackRef} style={{ width: `${_progress}%` }}></span>
+        <div className={className}
+             title={indeterminate ? "" : `Progress: ${_progress}%`}
+             role="progressbar"
+             aria-valuemin={0}
+             aria-valuemax={1}
+             aria-valuenow={progressDecimal}>
+            <span className="progress" ref={progressTrackRef} style={{ width: `${_progress}%` }}>
+                <div className="label-wrapper">
+                <span className="label">
+                    {!indeterminate && (
+                        <>
+                            {_progress}%
+                        </>
+                    )}
+
+                </span>
+            </div>
+            </span>
         </div>
     )
 }

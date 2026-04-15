@@ -1,0 +1,167 @@
+/*!
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "sass:meta"
+@use "sass:map"
+@use "sass:list"
+@use "sass:string"
+
+@use "global"
+@use "media"
+@use "var"
+
+$_colour-prefix: string.unique-id()
+
+// The 'L' in HSL (in percentage) for the respective modes (dark, light).
+$_greys-light: (95%, 85%, 75%, 65%, 55%, 45%, 35%, 25%, 15%)
+$_greys-dark: (15%, 25%, 35%, 45%, 55%, 65%, 75%, 85%, 95%)
+
+$greys: ("light": $_greys-light, "dark": $_greys-dark)
+
+// These colours are the only ones which will be assumed to be our own in-house defined
+// colour strings. This is done to avoid incorrectly assuming CSS colours to be our own
+// inside the `colour.get` function, defined below.
+//
+// We also make sure these colour keys are enforced and only keys defined in the list
+// below will be able to be assigned to and be retrieved from.
+$_allowed-custom-colours: ("fg", "bg", "bg-dark-dim", "primary", "primary-brighter", "primary-darker")
+
+// Add every grey-* key to the allowlist.
+@for $i from 1 through list.length($_greys-light)
+    $_allowed-custom-colours: list.append($_allowed-custom-colours, "grey-#{$i}00")
+
+// ---
+
+@function get($colour)
+
+    @if list.index($_allowed-custom-colours, $colour) == null
+        @return $colour
+
+    @return var(--#{$_colour-prefix}-#{$colour})
+
+@mixin set($key, $value)
+
+    @if list.index($_allowed-custom-colours, $key) == null
+        @error "Can only assign colours defined in the allowed-custom-colours constant."
+
+    $property: --#{$_colour-prefix}-#{$key}
+
+    #{$property}: #{$value}
+
+
+@function _get-custom-property-grey-key($index)
+    @return #{$_colour-prefix}-grey-#{$index}
+
+
+@mixin base
+    @each $mode in global.$modes
+        $i: 1
+        @include media.query("mode: #{$mode}")
+            @each $lightness in map.get($greys, $mode)
+                @include set(grey-#{$i * 100}, hsl(0, 0%, $lightness))
+                $i: $i + 1
+
+
+    @include set(fg, black)
+    @include set(bg, white)
+
+    @include media.query("mode: dark")
+        @include set(fg, white)
+        @include set(bg, black)
+
+    @include set(bg-dark-dim, rgb(30, 30, 30))
+
+    @include set(primary, rgb(0, 100, 255))
+    @include set(primary-brighter, rgb(0, 150, 255))
+    @include set(primary-darker, rgb(0, 50, 255))
+
+    //@include media.query("theme: native and os: Windows")
+        @include set(primary, hsl(217, 90%, 54%))
+
+        @include set(primary-brighter, hsl(217, 90%, 64%))
+        @include set(primary-darker, hsl(217, 90%, 44%))
+
+    @include media.query("mode: dark")
+        @include set(primary, rgb(0, 133, 255))
+        @include set(primary-brighter, rgb(0, 133, 255))
+        @include set(primary-darker, rgb(0, 100, 255))
+
+
+@mixin _colour-mixin-wrapper($mixin, $property, $args)
+    $keywords: meta.keywords($args)
+
+    // Get the total length of args which counts both keyword arguments
+    // and positional arguments.
+    $length: list.length($keywords) + list.length($args)
+
+    @if $length < 1
+        @error "Provide at least one argument to the `#{$mixin}` mixin."
+
+    $colour: null
+
+    @if map.has-key($keywords, "colour")
+        $colour: map.get($keywords, "colour")
+    @else if list.length($args) >= 1
+        $colour: list.nth($args, 1)
+
+    $colour-when-light: null
+    $colour-when-dark: null
+
+    @if map.has-key($keywords, "light")
+        $colour-when-light: map.get($keywords, "light")
+
+    @if map.has-key($keywords, "dark")
+        $colour-when-dark: map.get($keywords, "dark")
+
+    @if $colour-when-light or $colour-when-dark
+        @if $colour
+            @error "Providing $colour (both implicitly or via keyword argument) and $light (and/or $dark) is not possible."
+
+        @if $colour-when-light != null
+            @include media.query("mode: light")
+                #{$property}: get($colour-when-light)
+
+        @if $colour-when-dark != null
+            @include media.query("mode: dark")
+                #{$property}: get($colour-when-dark)
+
+    @else if not $colour
+        @error "$colour is null; can't set #{$property}."
+    @else
+        #{$property}: get($colour)
+
+// --- PRIMARILY FOR CONSUMERS: ---
+
+@mixin background($args...)
+    @include _colour-mixin-wrapper("colour.background", "background-color", $args)
+
+@mixin foreground($args...)
+    @include _colour-mixin-wrapper("colour.foreground", "color", $args)
+
+
+@mixin _apply-border-colour($colour, $directions)
+    @if $directions
+        @each $direction in $directions
+            border-#{$direction}-color: get($colour)
+    @else
+        border-color: get($colour)
+
+
+@mixin border($colour: null, $light: null, $dark: null, $for: null)
+    @if $light
+        @include media.query("mode: light")
+            @include _apply-border-colour($light, $for)
+
+    @if $dark
+        @include media.query("mode: dark")
+            @include _apply-border-colour($dark, $for)
+
+    @if not $light or $dark
+        @include _apply-border-colour($colour, $for)
+
+@mixin outline($colour)
+    outline-color: get($colour)

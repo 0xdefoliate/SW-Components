@@ -1,0 +1,143 @@
+/*!
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "media"
+@use "state"
+@use "icon"
+@use "colour"
+@use "var"
+@use "global"
+
+@keyframes rotate-chevron
+    from
+        transform: rotate(0)
+
+    to
+        transform: rotate(180deg)
+
+@keyframes rotate-chevron-reverse
+    from
+        transform: rotate(180deg)
+
+    to
+        transform: rotate(0)
+
+@keyframes dropdown-options-show
+    from
+        opacity: 0
+
+    to
+        opacity: 1
+
+@include component(Dropdown)
+    width: 100%
+    height: 2.4rem
+
+    position: relative
+
+    align-items: center
+
+    box-sizing: content-box
+
+    @include user-select(none)
+
+    @include var.set(animation-duration, 0.2s)
+
+    @media (prefers-reduced-motion: reduce)
+        @include var.set(animation-duration, 0ms)
+
+
+@include component(Dropdown-Button, $input: true)
+    @include size(100%)
+
+    padding: 0 2px
+
+    position: relative
+
+    display: flex
+    align-items: center
+
+    gap: 8px
+
+    overflow: hidden
+
+    box-sizing: border-box
+
+    & > .text
+        max-width: calc(100% - 16px)
+        overflow: hidden
+
+    & > .chevron-icon
+
+        &.show::after
+            animation: var.get(animation-duration) ease-in-out forwards rotate-chevron
+
+        &.hidden::after
+            animation: var.get(animation-duration) ease-in-out forwards rotate-chevron-reverse
+
+        &::after
+            // Add a sprinkle of margin above the icon to compensate for
+            // the icon looking a bit off-centre.
+            margin-top: 2px
+
+            @include size(16px)
+
+            @include icon.use("chevron-down")
+
+
+        height: 100%
+
+        right: 5px
+
+        position: absolute
+
+        font-size: 1rem
+
+        display: flex
+        align-items: center
+
+
+@include component(Dropdown-Options)
+    width: calc(100% - 1.5px)
+
+    top: 39.5px
+    left: 0
+
+    margin: 0
+    padding: 0
+
+    position: absolute
+
+    z-index: 1
+
+    overflow: hidden
+
+    box-sizing: content-box
+
+    list-style: none
+
+    border: 1px solid
+
+    @include border()
+
+    @include blur(10px)
+
+    border-radius: var.get(default-border-radius)
+
+    @include colour.background($light: bg, $dark: grey-200)
+    @include colour.border($light: bg, $dark: grey-200)
+
+    @include shadow(0, 1px, 12px, 0.5)
+
+    animation: var.get(animation-duration) ease-in-out dropdown-options-show
+
+    &.hidden
+        display: none

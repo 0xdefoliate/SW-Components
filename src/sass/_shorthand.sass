@@ -1,0 +1,83 @@
+/*!
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "sass:meta"
+@use "sass:list"
+
+@use "colour"
+@use "var"
+
+
+@mixin _inject-css-property($property, $property-value, $reset, $important)
+
+    @if $reset
+        $property-value: none
+
+    @if not $important
+        #{$property}: #{$property-value}
+    @else
+        #{$property}: #{$property-value} !important
+
+@mixin size($size)
+    width: $size
+    height: $size
+
+
+@mixin user-select($value)
+    -moz-user-select: $value
+    -ms-user-select: $value
+    -webkit-user-select: $value
+    user-select: $value
+
+
+@mixin gradient($direction, $c-1, $c-2, $c-3: null, $c-4: null, $reset: false, $important: false)
+    @if $direction != "horizontal" and $direction != "vertical" and meta.type-of($direction) != number
+        @error "Unknown type/value: '#{$direction}'"
+
+
+    $degrees: 180deg
+
+    @if $direction == "horizontal"
+        $degrees: 90deg
+
+    @if meta.type-of($direction) == number
+        $degrees: $direction
+
+    $property-value: linear-gradient($degrees, $c-1, $c-2)
+
+    @if $c-3
+        $property-value: linear-gradient($degrees, $c-1, $c-2, $c-3)
+
+    @if $c-3 and $c-4
+        $property-value: linear-gradient($degrees, $c-1, $c-2, $c-3, $c-4)
+
+
+    @include _inject-css-property("background", $property-value, $reset, $important)
+
+
+@mixin shadow($x: 2px, $y: 2px, $blur: 4px, $alpha: 0.4, $inset: false, $reset: false, $important: false)
+    $property-value: $x $y $blur rgba(0, 0, 0, $alpha)
+
+    @if $inset
+        $property-value: #{$property-value} inset
+
+    @include _inject-css-property("box-shadow", $property-value, $reset, $important)
+
+
+@mixin blur($value)
+    -webkit-backdrop-filter: blur($value)
+    backdrop-filter: blur($value)
+
+
+@mixin appearance($value)
+    -webkit-appearance: $value
+    appearance: $value
+
+
+@mixin border($width: 1.4px, $colour: colour.get(grey-400), $radius: var.get(default-border-radius))
+    border: #{$width} solid #{$colour}
+    border-radius: #{$radius}

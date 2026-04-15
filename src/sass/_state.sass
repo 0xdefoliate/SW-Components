@@ -1,0 +1,78 @@
+/*!
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "sass:string"
+@use "sass:selector"
+
+@mixin not-disabled($also: null)
+    &:where(:not(:disabled):not(.disabled):not([aria-disabled="true"]) #{$also})
+        @content
+
+@mixin disabled($also: "")
+    &:disabled #{$also},
+    &.disabled #{$also},
+    &[aria-disabled="true"] #{$also}
+        @content
+
+
+@mixin not-hover
+    &:where(:not(:hover))
+        @content
+
+@mixin hover
+    @media (hover: hover)
+        &:where(:not(:disabled):not(.disabled):not([aria-disabled="true"])):hover
+            @content
+
+
+@mixin not-active
+    &:where(:not(:active)),
+    &:where(:not(.__KEYBOARD_CLICK__))
+        @content
+
+@mixin active
+    &:where(:not(:disabled):not(.disabled):not([aria-disabled="true"])):is(:active, .__KEYBOARD_CLICK__)
+        @content
+
+
+@mixin not-checked($also: "")
+
+    $selector: selector.unify()
+
+    &:not(&:where(&:checked #{$also}):where(&:not([aria-checked="true"]))) #{$also}
+        @content
+
+@mixin checked($also: "")
+    &:checked #{$also},
+    &[aria-checked="true"] #{$also}
+        @content
+
+
+@mixin not-focus-visible
+    &:where(:not(:focus-visible))
+        @content
+
+@mixin focus-visible
+    &:where(:focus-visible)
+        @content
+
+
+@mixin not-focus
+    &:where(:not(:focus-visible))
+        @content
+
+@mixin focus
+    &:where(:focus)
+        @content
+
+@mixin not-any-focus
+    &:where(:not(:focus, :focus-visible, .__FOCUS__))
+        @content
+
+@mixin any-focus
+    &:where(:focus, :focus-visible, .__FOCUS__)
+        @content

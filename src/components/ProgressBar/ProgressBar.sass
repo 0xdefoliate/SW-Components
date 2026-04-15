@@ -1,0 +1,96 @@
+/*!
+ * Copyright (c) 2026 Axel "Foley" Karlsson and contributors.
+ *
+ * Use of this source code is governed by the MIT License, which you may
+ * view in its entirety in the LICENSE file, found in the project's root directory.
+ */
+
+@use "sass:math"
+
+@use "@/index.sass" as *
+
+@use "shorthand" as *
+
+@use "media"
+@use "state"
+@use "colour"
+@use "var"
+
+@keyframes indeterminate
+
+    $width: 24%
+
+    0%
+        width: $width
+        transform: skew(-60deg)
+        left: calc(0% - $width)
+
+
+    100%
+        width: $width
+        transform: skew(-60deg)
+        left: calc(100% + $width)
+
+
+@include component(ProgressBar, $input: true)
+    $height: 21px
+    $radius: 2px
+
+    width: 100%
+    height: $height
+
+    position: relative
+
+    border-radius: $radius
+
+    box-sizing: content-box
+
+    overflow: hidden
+
+    &.indeterminate
+
+        cursor: wait
+        
+        .progress
+            @media (prefers-reduced-motion: reduce)
+                animation: none
+
+            animation: indeterminate 2s infinite linear
+            @include shadow(-2px, 0)
+
+    & > .progress
+        top: 0
+        left: 0
+
+        height: $height
+
+        position: absolute
+
+        @include colour.background(primary)
+        @include shadow(4px, 0, 5px, 0.1)
+
+        & > .label-wrapper
+            position: relative
+            width: 100%
+            height: $height
+            display: flex
+            align-items: center
+            justify-content: center
+
+            font-size: 0.75rem
+            font-weight: 600
+
+            z-index: 1
+
+            & > .label
+                color: white
+                mix-blend-mode: difference
+                text-overflow: ellipsis
+                overflow: hidden
+
+                @include user-select(none)
+
+    // Don't reflect the presence of the cursor hovering so
+    // users understand this element isn't interactable with directly.
+    @include state.hover
+        filter: none !important
