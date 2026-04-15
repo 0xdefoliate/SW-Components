@@ -1,5 +1,5 @@
 {
-    "name": "SolidWeather Components (DevContainer)",
+    "name": "SW-Components (DevContainer)",
     "build": {
         "dockerfile": "Dockerfile"
     },
@@ -9,7 +9,6 @@
     "remoteUser": "node",
     "containerUser": "node",
     "runArgs": [
-        "--cap-drop", "all",
         "--security-opt", "no-new-privileges"
     ]
 }
