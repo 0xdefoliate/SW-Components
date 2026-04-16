@@ -3,13 +3,7 @@
     "build": {
         "dockerfile": "Dockerfile"
     },
-    // Allow the `vite` dev server to be accessed from host
-    "forwardPorts": ["5173:5173"],
     "privileged": false,
     "remoteUser": "node",
     "containerUser": "node",
-    // TODO: Add reasonable security but make it usable
-    //"runArgs": [
-    //    "--security-opt", "no-new-privileges"
-    //]
 }
