@@ -5,8 +5,6 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import { useContext } from "react"
-import { AppearanceContext } from "@/components/Appearance/AppearanceContext"
 import { _componentPrefix } from "@/index"
 import type { UseClassNameBasicOverload, UseClassNameBooleanish, UseClassNameComplexOverload } from ".."
 

@@ -5,7 +5,6 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import { _componentPrefix } from "@/index"
 import { type JSX, useContext, useEffect, useRef, useState } from "react"
 import { getClassName } from "@/internal/hooks/getClassName"
 import { DropdownContext } from "../../DropdownContext"

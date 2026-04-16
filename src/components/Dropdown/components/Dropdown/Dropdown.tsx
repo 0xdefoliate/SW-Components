@@ -5,7 +5,6 @@
  * view in its entirety in the LICENSE file, found in the project's root directory.
  */
 
-import { AppearanceContext } from "@/components/Appearance/AppearanceContext"
 import {
     Children,
     cloneElement,
@@ -13,7 +12,7 @@ import {
     type JSX,
     type ReactElement,
     type ReactNode,
-    type RefObject, useContext,
+    type RefObject,
     useEffect,
     useId,
     useRef,
