@@ -7,6 +7,7 @@ RUN apt update  -y &&           \
     apt install -y              \
         --no-install-recommends \
         build-essential         \
+        ca-certificates         \
         git                     \
         ssh                     \
         vim                     \

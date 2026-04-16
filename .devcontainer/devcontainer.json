@@ -6,4 +6,7 @@
     "privileged": false,
     "remoteUser": "node",
     "containerUser": "node",
+    "runArgs": [
+        "--security-opt", "no-new-privileges"
+    ]
 }
