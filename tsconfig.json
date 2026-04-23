@@ -45,5 +45,9 @@
         }
     },
     "include": [ "src/**/*", "*.ts" ],
-    "exclude": [ "src/internal/**/*" ]
+    "exclude": [
+        "src/internal/**/*",
+        "vite.config.ts",
+        "eslint.config.ts"
+    ]
 }
