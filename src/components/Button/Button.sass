@@ -28,8 +28,8 @@
 
     padding: 10px 8px
 
-    @include colour.background($light: bg, $dark: grey-300)
-    @include colour.foreground($light: ButtonText, $dark: grey-900)
+    @include colour.background($light: bg, $dark: grey-200)
+    @include colour.foreground($light: ButtonText, $dark: grey-800)
 
     @include state.disabled
         @include colour.background(grey-100)
@@ -59,11 +59,11 @@
     @include shadow(1px, 2px, $blur: 2px, $alpha: 0.1)
 
     @include state.hover
-        filter: contrast(0.95)
+        filter: brightness(0.95)
         @include shadow(1px, 2px, $blur: 8px, $alpha: 0.15)
 
     @include state.active
-        filter: contrast(0.65)
+        filter: brightness(0.8)
 
     @include state.focus-visible
         @include _button-border(colour.get(primary))
@@ -71,15 +71,14 @@
 
 @include extension($source: Button, $new: primary)
 
-    @include colour.background(primary)
+    @include colour.background($light: primary, $dark: primary-darker)
     @include colour.foreground(white)
     @include colour.border(primary)
 
-    transition-property: background-color
-
     @include state.active
-        filter: none
-        @include colour.background($light: primary-darker, $dark: rgb(0, 156, 255))
+        filter: brightness(0.75)
+        //@include colour.background($light: primary-darker, $dark: rgb(0, 77, 186))
+        //@include colour.border(rgb(0, 102, 255))
 
     @include state.focus-visible
         @include shadow(0, 0, $important: true)
