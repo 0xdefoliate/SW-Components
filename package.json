@@ -1,6 +1,6 @@
 {
     "name": "@solidweather/components",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "author": {
         "name": "Axel H. Karlsson",
         "url": "https://axelkarlsson.se"
@@ -35,22 +35,22 @@
     ],
     "devDependencies": {
         "@eslint/js": "9.35.0",
-        "@types/node": "25.6.0",
-        "@types/react": "19.2.14",
+        "@types/node": "25.9.1",
+        "@types/react": "19.2.15",
         "@types/react-dom": "19.2.3",
-        "@vitejs/plugin-react": "6.0.1",
+        "@vitejs/plugin-react": "6.0.2",
         "babel-plugin-react-compiler": "1.0.0",
-        "eslint": "10.2.0",
+        "eslint": "9.35.0",
         "eslint-plugin-react-hooks": "7.1.1",
         "eslint-plugin-react-refresh": "0.5.2",
         "globals": "17.5.0",
         "jiti": "2.6.1",
         "react": "19.2.6",
-        "react-dom": "19.2.5",
+        "react-dom": "19.2.6",
         "sass": "1.99.0",
-        "typescript": "5.8.3",
+        "typescript": "5.9.3",
         "typescript-eslint": "8.59.0",
-        "vite": "8.0.13"
+        "vite": "8.0.14"
     },
     "dependencies": {
         "bootstrap-icons": "1.13.1"
