@@ -46,11 +46,7 @@ export default defineConfig(({ mode }) => {
 
     return {
         plugins: [
-            react({
-                babel: {
-                    plugins: [ "babel-plugin-react-compiler" ]
-                }
-            })
+            react()
         ],
 
         build: {
@@ -63,7 +59,7 @@ export default defineConfig(({ mode }) => {
                 cssFileName: "index"
             },
 
-            rollupOptions: {
+            rolldownOptions: {
                 external: [ "react", "react-dom" ],
                 output: {
                     globals: {
