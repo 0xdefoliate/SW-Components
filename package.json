@@ -49,7 +49,7 @@
         "react-dom": "19.2.6",
         "sass": "1.99.0",
         "typescript": "5.9.3",
-        "typescript-eslint": "8.59.0",
+        "typescript-eslint": "8.60.1",
         "vite": "8.0.14"
     },
     "dependencies": {
