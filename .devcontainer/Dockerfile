@@ -1,4 +1,4 @@
-FROM node:26.2.0-trixie-slim
+FROM node:26.3.0-trixie-slim
 
 # Install `git` for VCS
 # Install `vim` to be able to edit `git commit` messages properly in terminal
